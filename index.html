@@ -1,0 +1,1402 @@
+<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eWorkPermit - ระบบทะเบียนคุมการจ่ายคืน</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sarabun: ['Sarabun', 'sans-serif'] },
+      colors: {
+        navy: { 50:'#f0f4ff',100:'#e0e9ff',200:'#c1d3fe',300:'#93b4fd',400:'#5e8bfa',500:'#3563e9',600:'#1e40af',700:'#1e3a8a',800:'#172e6e',900:'#0f1f4b' },
+        gold: { 400:'#facc15',500:'#eab308',600:'#ca8a04' }
+      }
+    }
+  }
+}
+</script>
+  <style>
+* { font-family: 'Sarabun', sans-serif; }
+html, body { height: 100%; margin: 0; }
+.sidebar-link { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 12px; }
+.sidebar-link:hover, .sidebar-link.active { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); box-shadow: inset 0 2px 8px rgba(255,255,255,0.1); }
+input, select, textarea { font-size: 14px !important; }
+.form-input { border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 11px 14px; width: 100%; transition: all 0.3s ease; background: #fff; font-family: 'Sarabun', sans-serif; }
+.form-input:focus { outline: none; border-color: #3563e9; box-shadow: 0 0 0 4px rgba(53,99,233,0.1), inset 0 1px 2px rgba(0,0,0,0.02); }
+.form-input:hover:not(:focus) { border-color: #cbd5e1; }
+.btn-primary { background: linear-gradient(135deg, #1e40af 0%, #3563e9 100%); color: #fff; padding: 11px 28px; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(53,99,233,0.2); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(53,99,233,0.35); }
+.btn-primary:active { transform: translateY(0); }
+.btn-secondary { background: #f1f5f9; color: #334155; padding: 11px 28px; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; border: 1.5px solid #e2e8f0; cursor: pointer; }
+.btn-secondary:hover { background: #e2e8f0; border-color: #cbd5e1; }
+.btn-warning { background: linear-gradient(135deg, #f59e0b 0%, #eab308 100%); color: #fff; padding: 11px 28px; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(234,179,8,0.2); }
+.btn-warning:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(234,179,8,0.35); }
+.btn-success { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: #fff; padding: 11px 28px; border-radius: 12px; font-weight: 600; transition: all 0.3s ease; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(16,185,129,0.2); }
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16,185,129,0.35); }
+.card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; transition: all 0.3s ease; }
+.card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.08); }
+.badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; }
+.toast-msg { position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 14px 24px; border-radius: 12px; color: #fff; font-weight: 600; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.table-container { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.data-table th { background: linear-gradient(90deg, #f0f4ff, #f8fafc); color: #1e3a8a; font-weight: 700; font-size: 13px; padding: 14px 14px; border-bottom: 2px solid #e2e8f0; white-space: nowrap; position: sticky; top: 0; z-index: 2; letter-spacing: 0.3px; }
+.data-table td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: middle; }
+.data-table tr:hover td { background: #f8fafc; }
+
+/* Mobile responsive table */
+@media (max-width: 768px) {
+  .table-container { max-height: 600px !important; }
+  .data-table { font-size: 12px; }
+  .data-table th { padding: 10px 8px; font-size: 11px; }
+  .data-table td { padding: 8px 6px; font-size: 12px; }
+  .form-input { font-size: 13px !important; padding: 9px 12px; }
+  .btn-primary, .btn-secondary, .btn-warning, .btn-success { padding: 9px 20px; font-size: 12px; }
+  .card { border-radius: 12px; padding: 16px !important; }
+  .section-title { font-size: 13px; padding: 10px 12px; margin-bottom: 14px; }
+}
+
+@media (max-width: 640px) {
+  #sidebar { width: 0; position: fixed; left: 0; height: 100%; z-index: 100; transform: translateX(-100%); transition: transform 0.3s ease; }
+  #sidebar.open { transform: translateX(0); }
+  .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
+  .sidebar-overlay.show { display: block; }
+  #main { width: 100%; }
+  header { padding: 16px; }
+  #main-title { font-size: 14px; }
+  p.text-sm { font-size: 11px; }
+  .grid { gap: 12px !important; }
+  .grid > div { min-width: 0; }
+  .card { margin-bottom: 12px !important; }
+  .table-container { max-height: 400px !important; font-size: 11px; }
+  .data-table th { padding: 8px 6px; font-size: 10px; }
+  .data-table td { padding: 6px 4px; font-size: 11px; word-break: break-word; }
+  .btn-primary, .btn-secondary, .btn-warning, .btn-success { padding: 8px 16px; font-size: 11px; }
+  .form-input { font-size: 12px !important; padding: 8px 10px; }
+  .badge { padding: 4px 10px; font-size: 10px; }
+  .section-title { font-size: 12px; padding: 8px 10px; }
+}
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; display: flex; align-items: center; justify-content: center; }
+.modal { background: #fff; border-radius: 20px; max-width: 95%; max-height: 90%; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #cbd5e1, #94a3b8); border-radius: 4px; transition: all 0.3s ease; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(to bottom, #94a3b8, #64748b); }
+.section-title { font-size: 15px; font-weight: 700; color: #1e3a8a; padding: 12px 16px; background: linear-gradient(90deg, #e0e9ff 0%, transparent 60%); border-left: 4px solid #3563e9; border-radius: 8px; margin-bottom: 18px; letter-spacing: 0.2px; }
+.sidebar-collapsed .sidebar-text { display: none; }
+.sidebar-collapsed .sidebar-icon { margin-right: 0; }
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-slate-50">
+  <div id="app" class="flex h-full w-full"><!-- Sidebar -->
+   <aside id="sidebar" class="flex-shrink-0 flex flex-col" style="width:260px; background: linear-gradient(180deg, #0f1f4b 0%, #1e3a8a 50%, #1e40af 100%);">
+    <div class="p-5 border-b border-white/10">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gold-400 flex items-center justify-center"><i data-lucide="file-badge" class="w-5 h-5 text-navy-900"></i>
+      </div>
+      <div class="sidebar-text">
+       <div class="text-white font-bold text-sm leading-tight">
+        eWorkPermit
+       </div>
+       <div class="text-blue-300 text-xs">
+        ระบบทะเบียนคุมการจ่ายคืน
+       </div>
+      </div>
+     </div>
+    </div>
+    <nav class="flex-1 py-4 px-3 space-y-1"><a href="#" onclick="showPage('form'); return false;" id="nav-form" class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded-xl text-white/90 text-sm"> <i data-lucide="file-plus" class="w-5 h-5 sidebar-icon"></i> <span class="sidebar-text">บันทึกข้อมูลใหม่</span> </a> <a href="#" onclick="showPage('search'); return false;" id="nav-search" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/90 text-sm"> <i data-lucide="search" class="w-5 h-5 sidebar-icon"></i> <span class="sidebar-text">เรียกดูข้อมูล</span> </a> <a href="#" onclick="showPage('dashboard'); return false;" id="nav-dashboard" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/90 text-sm"> <i data-lucide="bar-chart-3" class="w-5 h-5 sidebar-icon"></i> <span class="sidebar-text">สรุปภาพรวม</span> </a> <a href="#" onclick="showPage('settings'); return false;" id="nav-settings" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/90 text-sm"> <i data-lucide="settings" class="w-5 h-5 sidebar-icon"></i> <span class="sidebar-text">การตั้งค่าระบบ</span> </a>
+    </nav>
+    <div class="p-4 border-t border-white/10 sidebar-text">
+     <div class="text-blue-300 text-xs text-center">
+      ประจำปีงบประมาณ <span id="sidebar-year">2569</span>
+     </div>
+    </div>
+   </aside><!-- Main -->
+   <main class="flex-1 overflow-auto h-full" id="main"><!-- Header -->
+    <header class="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-10">
+     <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+       <button id="sidebarToggle" class="hidden md:hidden text-navy-800 hover:bg-slate-100 p-2 rounded-lg"> <i data-lucide="menu" class="w-5 h-5"></i> </button>
+       <div>
+        <h1 id="main-title" class="text-lg font-bold text-navy-800 leading-tight">ระบบทะเบียนคุมการจ่ายคืนค่าธรรมเนียมใบอนุญาตทำงาน</h1>
+        <p class="text-sm text-slate-500">และเงินหลักประกันการอนุญาตทำงานของคนต่างด้าวรายตัว eWorkPermit | ประจำปีงบประมาณ <span id="header-year">2569</span></p>
+       </div>
+      </div>
+      <div class="flex items-center gap-3">
+       <div class="text-right">
+        <div class="text-xs text-slate-400" id="current-date"></div>
+        <div class="text-xs text-slate-400" id="current-time"></div>
+       </div>
+      </div>
+     </div>
+    </header><!-- Page: Form -->
+    <div id="page-form" class="p-6">
+     <form id="mainForm" onsubmit="submitForm(event)"><!-- ส่วนที่ 1: ข้อมูลทั่วไป -->
+      <div class="card p-6 mb-5">
+       <div class="section-title">
+        📋 ข้อมูลทั่วไป
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">ลำดับที่</label> <input type="text" id="f_order" class="form-input" placeholder="ระบบกำหนดอัตโนมัติ" readonly style="background-color:#f1f5f9;cursor:not-allowed;color:#64748b;">
+         <div class="text-xs text-slate-500 mt-1">
+          ระบบจะกำหนดเลขลำดับอัตโนมัติ
+         </div>
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">เลขรับที่</label> <input type="text" id="f_receiveNo" class="form-input" placeholder="เลขรับที่" required>
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">เลขรับหนังสือ สบต.</label> <input type="text" id="f_sbtDocNo" class="form-input" placeholder="เลขรับหนังสือ สบต.">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">วันที่รับหนังสือ (สบต)</label> <input type="date" id="f_sbtDate" class="form-input">
+        </div>
+       </div>
+      </div><!-- ส่วนที่ 2: ข้อมูลค่าธรรมเนียม -->
+      <div class="card p-6 mb-5">
+       <div class="section-title">
+        👤 ข้อมูลผู้ชำระเงิน
+       </div>
+       <div class="grid grid-cols-1 gap-4 mb-5">
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">ผู้ชำระเงิน (นายจ้าง/บนจ)</label> <input type="text" id="f_payer" class="form-input" placeholder="ชื่อผู้ชำระเงิน">
+        </div>
+       </div>
+      </div><!-- ส่วนที่ 2: ข้อมูลค่าธรรมเนียม -->
+      <div class="card p-6 mb-5">
+       <div class="section-title">
+        💰 ข้อมูลค่าธรรมเนียมใบอนุญาตทำงาน
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">เลขที่ใบเสร็จรับเงิน (ค่าธรรมเนียม)</label> <input type="text" id="f_feeReceiptNo" class="form-input" placeholder="เลขที่ใบเสร็จ">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">วันที่ใบเสร็จรับเงิน (ค่าธรรมเนียม)</label> <input type="date" id="f_feeReceiptDate" class="form-input">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">ชื่อเจ้าหน้าที่รับเงิน (ค่าธรรมเนียม)</label> <input type="text" id="f_feeOfficer" class="form-input" placeholder="ชื่อเจ้าหน้าที่">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">จำนวนเงิน (ค่าธรรมเนียม)</label> <input type="text" id="f_feeAmount" class="form-input" placeholder="0.00" inputmode="decimal">
+        </div>
+       </div>
+      </div><!-- ส่วนที่ 3: ข้อมูลแรงงานต่างด้าว -->
+      <div class="card p-6 mb-5">
+       <div class="section-title">
+        👤 ข้อมูลแรงงานต่างด้าว
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">เลขประจำตัว/เลขอ้างอิงแรงงาน</label> <input type="text" id="f_workerID" class="form-input" placeholder="RA + 17 หลัก" maxlength="20" pattern="^RA\d{17}$" title="ต้องขึ้นต้นด้วย RA และตัวเลขอีก 17 หลัก">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">ชื่อแรงงานต่างด้าว</label> <input type="text" id="f_workerName" class="form-input" placeholder="ชื่อแรงงาน (ตัวอักษรใหญ่)">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">สัญชาติ</label> <select id="f_nationality" class="form-input"> <option value="">-- เลือกสัญชาติ --</option> <option>เมียนมา</option> <option>กัมพูชา</option> <option>ลาว</option> <option>เวียดนาม</option> <option>อื่นๆ</option> </select>
+        </div>
+       </div>
+      </div><!-- ส่วนที่ 4: ค่าหลักประกัน -->
+      <div class="card p-6 mb-5">
+       <div class="section-title">
+        🔒 ข้อมูลค่าหลักประกัน
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">เลขที่ใบเสร็จรับเงิน (ค่าหลักประกัน)</label> <input type="text" id="f_depositReceiptNo" class="form-input" placeholder="เลขที่ใบเสร็จ">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">วันที่ใบเสร็จรับเงิน (ค่าหลักประกัน)</label> <input type="date" id="f_depositReceiptDate" class="form-input">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">ชื่อเจ้าหน้าที่รับเงิน (ค่าหลักประกัน)</label> <input type="text" id="f_depositOfficer" class="form-input" placeholder="ชื่อเจ้าหน้าที่">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">จำนวนเงิน (ค่าหลักประกัน)</label> <input type="text" id="f_depositAmount" class="form-input" placeholder="0.00" inputmode="decimal">
+        </div>
+       </div>
+      </div><!-- ส่วนที่ 5: การดำเนินการ -->
+      <div class="card p-6 mb-5">
+       <div class="section-title">
+        ⚙️ ข้อมูลการดำเนินการ
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">วันที่ขออนุมัติ</label> <input type="date" id="f_approvalDate" class="form-input">
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">เจ้าหน้าที่ผู้รับผิดชอบ</label> <select id="f_responsible" class="form-input"> <option value="">-- เลือกเจ้าหน้าที่ --</option> <option>นางสาวอารีวรรณ โพธิ์นิ่มแดง</option> <option>นางสาวธนะวรรณ มานะจิตต์</option> <option>นางสาวณัฐวดี ช่วยยก</option> <option>นางสาวนภาพร มณีวัง</option> <option>นางสาวอาภัสนันต์ นวลศรี</option> <option>นางสาวทิพย์วิมล เพ็งเจริญ</option> </select>
+        </div>
+        <div><label class="block text-sm font-semibold text-slate-700 mb-1">สถานะการดำเนินการ</label> <select id="f_status" class="form-input"> <option value="">-- เลือกสถานะ --</option> <option>อยู่ระหว่างตรวจสอบข้อมูล</option> <option>อยู่ระหว่างประสานงานผู้แจ้ง</option> <option>อยู่ระหว่างเสนอหนังสือพิจารณา/อนุมัติ</option> <option>อยู่ระหว่างพิจารณาจ่ายเงิน</option> <option>ดำเนินการเสร็จสิ้น</option> </select>
+        </div>
+        <div class="md:col-span-2 lg:col-span-3"><label class="block text-sm font-semibold text-slate-700 mb-1">หมายเหตุ</label> <textarea id="f_remark" class="form-input" rows="2" placeholder="หมายเหตุเพิ่มเติม..."></textarea>
+        </div>
+       </div>
+      </div><!-- Buttons -->
+      <div class="flex gap-3 justify-end"><button type="button" onclick="clearForm()" class="btn-secondary flex items-center gap-2"> <i data-lucide="eraser" class="w-4 h-4"></i> ล้างข้อมูล </button> <button type="submit" id="btnSubmit" class="btn-primary flex items-center gap-2"> <i data-lucide="save" class="w-4 h-4"></i> บันทึกข้อมูล </button>
+      </div>
+     </form>
+    </div><!-- Page: Search -->
+    <div id="page-search" class="p-6 hidden">
+     <div class="card p-6 mb-5">
+      <div class="section-title">
+       🔍 ค้นหาข้อมูลจากฐานข้อมูล
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+       <div><label class="block text-sm font-semibold text-slate-700 mb-1">ค้นหาจากเลขรับที่ (กรณีแก้ไขสถานะ)</label> <input type="text" id="s_receiveNo" class="form-input" placeholder="พิมพ์เลขรับที่...">
+       </div>
+       <div><label class="block text-sm font-semibold text-slate-700 mb-1">ค้นหาจากเลขประจำตัวแรงงาน (กรณีพิมพ์ข้อมูลไม่ถูกต้อง)</label> <input type="text" id="s_workerID" class="form-input" placeholder="พิมพ์เลขประจำตัว...">
+       </div>
+       <div class="flex items-end gap-2"><button type="button" onclick="searchData()" class="btn-primary flex items-center gap-2"> <i data-lucide="search" class="w-4 h-4"></i> ค้นหา </button> <button type="button" onclick="loadAllData()" class="btn-secondary flex items-center gap-2"> <i data-lucide="list" class="w-4 h-4"></i> แสดงทั้งหมด </button>
+       </div>
+      </div><!-- Bulk Status Update Section -->
+      <div id="bulkStatusSection" class="hidden border-t pt-4 mt-4">
+       <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <h4 class="font-semibold text-sm text-navy-800 mb-3">อัปเดตสถานะเป็นชุด</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div><label class="block text-sm font-semibold text-slate-700 mb-2">เลือกสถานะใหม่สำหรับรายการที่พบ:</label> <select id="bulkStatusSelect" class="form-input"> <option value="">-- เลือกสถานะ --</option> </select>
+         </div>
+         <div class="flex items-end gap-2"><button type="button" onclick="applyBulkStatusUpdate()" class="btn-success flex items-center gap-2"> <i data-lucide="check-circle" class="w-4 h-4"></i> อัปเดตทั้งหมด </button> <button type="button" onclick="clearBulkStatus()" class="btn-secondary flex items-center gap-2"> <i data-lucide="x" class="w-4 h-4"></i> ยกเลิก </button>
+         </div>
+        </div>
+        <div class="mt-3 text-xs text-slate-600"><i data-lucide="info" class="w-4 h-4 inline mr-1"></i> ระบบจะอัปเดตสถานะสำหรับรายการทั้งหมด <span id="bulkUpdateCount" class="font-semibold text-navy-800">0</span> รายการที่พบ
+        </div>
+       </div>
+      </div>
+     </div>
+     <div id="searchResults" class="card hidden">
+      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+       <h3 class="font-bold text-navy-800">ผลการค้นหา (<span id="resultCount">0</span> รายการ)</h3><button type="button" onclick="saveAllEdits()" class="btn-success flex items-center gap-2"> <i data-lucide="save" class="w-4 h-4"></i> บันทึกการแก้ไขทั้งหมด </button>
+      </div>
+      <div class="table-container" style="max-height: 600px; overflow-y: auto;">
+       <table class="data-table">
+        <thead>
+         <tr>
+          <th>ลำดับที่</th>
+          <th>เลขรับที่</th>
+          <th>เลขรับหนังสือ สบต.</th>
+          <th>วันที่รับ (สบต)</th>
+          <th>ผู้ชำระเงิน</th>
+          <th>เลขใบเสร็จ (ธรรมเนียม)</th>
+          <th>วันที่ใบเสร็จ (ธรรมเนียม)</th>
+          <th>จนท.รับเงิน (ธรรมเนียม)</th>
+          <th>จำนวนเงิน (ธรรมเนียม)</th>
+          <th>เลขประจำตัวแรงงาน</th>
+          <th>ชื่อแรงงาน</th>
+          <th>สัญชาติ</th>
+          <th>เลขใบเสร็จ (หลักประกัน)</th>
+          <th>วันที่ใบเสร็จ (หลักประกัน)</th>
+          <th>จนท.รับเงิน (หลักประกัน)</th>
+          <th>จำนวนเงิน (หลักประกัน)</th>
+          <th>วันที่ขออนุมัติ</th>
+          <th>เจ้าหน้าที่ผู้รับผิดชอบ</th>
+          <th>สถานะ</th>
+          <th>วันเวลาแจ้งสถานะล่าสุด</th>
+          <th>หมายเหตุ</th>
+          <th>แก้ไข</th>
+         </tr>
+        </thead>
+        <tbody id="searchResultsBody"></tbody>
+       </table>
+      </div>
+     </div>
+    </div><!-- Page: Dashboard -->
+    <div id="page-dashboard" class="p-6 hidden overflow-y-auto">
+     <div class="card p-6 mb-5">
+      <div class="section-title">
+       📊 สรุปภาพรวมข้อมูล
+      </div>
+      <div id="dashboardContent" class="text-center py-10">
+       <div class="inline-flex flex-col items-center">
+        <div class="w-12 h-12 rounded-full bg-navy-100 flex items-center justify-center mb-3 animate-pulse">
+         <i data-lucide="bar-chart-3" class="w-6 h-6 text-navy-500"></i>
+        </div>
+        <p class="text-slate-600 font-medium">กำลังโหลดข้อมูลสรุป...</p>
+        <div class="flex gap-1 mt-3">
+         <div class="w-2 h-2 bg-navy-500 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
+         <div class="w-2 h-2 bg-navy-500 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+         <div class="w-2 h-2 bg-navy-500 rounded-full animate-bounce" style="animation-delay: 0.4s;"></div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div id="dashboardCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden"></div>
+     <div id="dashboardCharts" class="mt-5 hidden">
+      <div class="card p-6 mb-6">
+       <h3 class="font-bold text-navy-800 mb-5 flex items-center gap-2"><span class="w-1 h-6 bg-gradient-to-b from-navy-600 to-navy-400 rounded"></span> จำนวนรายการตามสถานะ</h3>
+       <div style="position: relative; height: 380px;">
+        <canvas id="statusChart"></canvas>
+       </div>
+       <div id="statusTableContainer" class="mt-6 border-t pt-6">
+        <h4 class="font-semibold text-sm text-navy-800 mb-4 flex items-center gap-2"><i data-lucide="table" class="w-4 h-4 text-navy-600"></i> สรุปจำนวนรายการและจำนวนเงินตามสถานะ</h4>
+        <div class="table-container">
+         <table class="data-table w-full">
+          <thead>
+           <tr>
+            <th class="text-left">สถานะ</th>
+            <th class="text-center">จำนวนรายการ</th>
+            <th class="text-right">รวมค่าธรรมเนียม (฿)</th>
+            <th class="text-right">รวมค่าหลักประกัน (฿)</th>
+            <th class="text-right">รวมทั้งหมด (฿)</th>
+           </tr>
+          </thead>
+          <tbody id="statusTableBody">
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Page: Settings -->
+    <div id="page-settings" class="p-6 hidden">
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Settings: Officers -->
+      <div class="card p-6">
+       <div class="section-title">
+        👥 จัดการเจ้าหน้าที่ผู้รับผิดชอบ
+       </div>
+       <div class="mb-4">
+        <label class="block text-sm font-semibold text-slate-700 mb-2">เพิ่มเจ้าหน้าที่ใหม่</label>
+        <div class="flex gap-2">
+         <input type="text" id="newOfficer" class="form-input flex-1" placeholder="ชื่อเจ้าหน้าที่..."> <button type="button" onclick="addOfficer()" class="btn-primary flex items-center gap-2"> <i data-lucide="plus" class="w-4 h-4"></i> เพิ่ม </button>
+        </div>
+       </div>
+       <div class="border-t pt-4">
+        <h4 class="text-sm font-semibold text-slate-700 mb-3">รายชื่อเจ้าหน้าที่ (ทั้งหมด <span id="officerCount">0</span> คน)</h4>
+        <div id="officerList" class="space-y-2"></div>
+       </div>
+      </div><!-- Settings: Status -->
+      <div class="card p-6">
+       <div class="section-title">
+        📋 จัดการสถานะการดำเนินการ
+       </div>
+       <div class="mb-4">
+        <label class="block text-sm font-semibold text-slate-700 mb-2">เพิ่มสถานะใหม่</label>
+        <div class="flex gap-2">
+         <input type="text" id="newStatus" class="form-input flex-1" placeholder="ชื่อสถานะ..."> <button type="button" onclick="addStatus()" class="btn-primary flex items-center gap-2"> <i data-lucide="plus" class="w-4 h-4"></i> เพิ่ม </button>
+        </div>
+       </div>
+       <div class="border-t pt-4">
+        <h4 class="text-sm font-semibold text-slate-700 mb-3">รายชื่อสถานะ (ทั้งหมด <span id="statusCount">0</span> รายการ)</h4>
+        <div id="statusList" class="space-y-2"></div>
+       </div>
+      </div>
+     </div><!-- Save Settings Button -->
+     <div class="mt-6 flex justify-end">
+      <button type="button" onclick="saveSettings()" class="btn-success flex items-center gap-2"> <i data-lucide="save" class="w-4 h-4"></i> บันทึกการตั้งค่า </button>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+// Format amount fields with comma separator
+function formatAmountInput(input) {
+  if (!input) return;
+  input.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/[^0-9.]/g, '');
+    
+    // Handle decimal point - keep only first one
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    // Split into integer and decimal parts
+    const decimalParts = value.split('.');
+    let integerPart = decimalParts[0].replace(/^0+/, '') || '0';
+    let decimalPart = decimalParts[1] ? decimalParts[1].substring(0, 2) : '';
+    
+    // Add comma separator to integer part
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+    // Combine
+    e.target.value = decimalPart ? integerPart + '.' + decimalPart : integerPart;
+  });
+
+  input.addEventListener('blur', function(e) {
+    if (e.target.value === '' || e.target.value === '0') {
+      e.target.value = '';
+      return;
+    }
+    let value = e.target.value.replace(/,/g, '');
+    if (!isNaN(value) && value !== '') {
+      const num = parseFloat(value);
+      e.target.value = num.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+  });
+}
+
+// Initialize amount formatting on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const feeAmountInput = document.getElementById('f_feeAmount');
+  const depositAmountInput = document.getElementById('f_depositAmount');
+  if (feeAmountInput) formatAmountInput(feeAmountInput);
+  if (depositAmountInput) formatAmountInput(depositAmountInput);
+});
+
+// Validate and uppercase worker name
+document.getElementById('f_workerName').addEventListener('input', function(e) {
+  const input = e.target.value;
+  // Allow only English letters and spaces, auto-convert to uppercase
+  const sanitized = input.replace(/[^A-Za-z\s]/g, '').toUpperCase();
+  e.target.value = sanitized;
+});
+
+// Validate worker ID format (RA + 17 digits)
+document.getElementById('f_workerID').addEventListener('input', function(e) {
+  let value = e.target.value.toUpperCase().replace(/[^RA0-9]/g, '');
+  if (value.length > 20) value = value.slice(0, 20);
+  e.target.value = value;
+  
+  // Check format
+  if (value.length > 0 && !value.match(/^RA\d{0,17}$/)) {
+    e.target.style.borderColor = '#ef4444';
+  } else {
+    e.target.style.borderColor = '';
+  }
+});
+
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyeQjEGZ6rHEvJSnOXgXNqb1_rrrNmARQHUsdZ43xzcuyHb2TkhYHXVNw92XGwpTQnVXw/exec';
+let searchDataCache = [];
+let editedRows = {};
+
+// Settings Management - Officers and Status
+let systemSettings = {
+  officers: [
+    'นางสาวอารีวรรณ โพธิ์นิ่มแดง',
+    'นางสาวธนะวรรณ มานะจิตต์',
+    'นางสาวณัฐวดี ช่วยยก',
+    'นางสาวนภาพร มณีวัง',
+    'นางสาวอาภัสนันต์ นวลศรี',
+    'นางสาวทิพย์วิมล เพ็งเจริญ'
+  ],
+  statuses: [
+    'อยู่ระหว่างตรวจสอบข้อมูล',
+    'อยู่ระหว่างประสานงานผู้แจ้ง',
+    'อยู่ระหว่างเสนอหนังสือพิจารณา/อนุมัติ',
+    'อยู่ระหว่างพิจารณาจ่ายเงิน',
+    'ดำเนินการเสร็จสิ้น'
+  ]
+};
+
+// Load settings from localStorage
+function loadSettings() {
+  const saved = localStorage.getItem('systemSettings');
+  if (saved) {
+    try {
+      systemSettings = JSON.parse(saved);
+    } catch(e) {
+      console.log('Error loading settings:', e);
+    }
+  }
+  renderSettingsUI();
+}
+
+// Render settings UI
+function renderSettingsUI() {
+  // Officers list
+  const officerList = document.getElementById('officerList');
+  document.getElementById('officerCount').textContent = systemSettings.officers.length;
+  officerList.innerHTML = systemSettings.officers.map((officer, i) => `
+    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-lg border border-slate-200">
+      <span class="text-sm text-slate-700">${officer}</span>
+      <button type="button" onclick="removeOfficer(${i})" class="text-red-600 hover:text-red-800 font-semibold text-xs"><i data-lucide="trash-2" class="w-4 h-4 inline"></i> ลบ</button>
+    </div>
+  `).join('');
+
+  // Status list
+  const statusList = document.getElementById('statusList');
+  document.getElementById('statusCount').textContent = systemSettings.statuses.length;
+  statusList.innerHTML = systemSettings.statuses.map((status, i) => `
+    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-lg border border-slate-200">
+      <span class="text-sm text-slate-700">${status}</span>
+      <button type="button" onclick="removeStatus(${i})" class="text-red-600 hover:text-red-800 font-semibold text-xs"><i data-lucide="trash-2" class="w-4 h-4 inline"></i> ลบ</button>
+    </div>
+  `).join('');
+
+  // Update dropdowns in form
+  updateOfficerDropdown();
+  updateStatusDropdown();
+
+  lucide.createIcons();
+}
+
+function addOfficer() {
+  const input = document.getElementById('newOfficer');
+  const name = input.value.trim();
+  if (!name) {
+    Swal.fire({ icon:'warning', title:'กรุณากรอกชื่อเจ้าหน้าที่', confirmButtonColor:'#1e40af' });
+    return;
+  }
+  if (systemSettings.officers.includes(name)) {
+    Swal.fire({ icon:'warning', title:'เจ้าหน้าที่นี้มีอยู่แล้ว', confirmButtonColor:'#1e40af' });
+    return;
+  }
+  systemSettings.officers.push(name);
+  input.value = '';
+  renderSettingsUI();
+}
+
+function removeOfficer(index) {
+  systemSettings.officers.splice(index, 1);
+  renderSettingsUI();
+}
+
+function addStatus() {
+  const input = document.getElementById('newStatus');
+  const status = input.value.trim();
+  if (!status) {
+    Swal.fire({ icon:'warning', title:'กรุณากรอกชื่อสถานะ', confirmButtonColor:'#1e40af' });
+    return;
+  }
+  if (systemSettings.statuses.includes(status)) {
+    Swal.fire({ icon:'warning', title:'สถานะนี้มีอยู่แล้ว', confirmButtonColor:'#1e40af' });
+    return;
+  }
+  systemSettings.statuses.push(status);
+  input.value = '';
+  renderSettingsUI();
+}
+
+function removeStatus(index) {
+  systemSettings.statuses.splice(index, 1);
+  renderSettingsUI();
+}
+
+function updateOfficerDropdown() {
+  const select = document.getElementById('f_responsible');
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = '<option value="">-- เลือกเจ้าหน้าที่ --</option>' +
+    systemSettings.officers.map(o => `<option ${o===current?'selected':''}>${o}</option>`).join('');
+}
+
+function updateStatusDropdown() {
+  const select = document.getElementById('f_status');
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = '<option value="">-- เลือกสถานะ --</option>' +
+    systemSettings.statuses.map(s => `<option ${s===current?'selected':''}>${s}</option>`).join('');
+}
+
+function saveSettings() {
+  localStorage.setItem('systemSettings', JSON.stringify(systemSettings));
+  Swal.fire({ icon:'success', title:'บันทึกสำเร็จ!', text:'การตั้งค่าระบบถูกบันทึกเรียบร้อยแล้ว', confirmButtonColor:'#1e40af', timer:2000 });
+}
+
+// Default config
+const defaultConfig = {
+  system_title: 'ระบบทะเบียนคุมการจ่ายคืนค่าธรรมเนียมใบอนุญาตทำงาน',
+  fiscal_year: '2569',
+  background_color: '#f8fafc',
+  surface_color: '#ffffff',
+  text_color: '#0f1f4b',
+  primary_color: '#1e40af',
+  accent_color: '#eab308'
+};
+
+function applyConfig(config) {
+  const t = config.system_title || defaultConfig.system_title;
+  const y = config.fiscal_year || defaultConfig.fiscal_year;
+  const el1 = document.getElementById('main-title');
+  if (el1) el1.textContent = t;
+  const el2 = document.getElementById('header-year');
+  if (el2) el2.textContent = y;
+  const el3 = document.getElementById('sidebar-year');
+  if (el3) el3.textContent = y;
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+  loadSettings();
+});
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange: async (config) => {
+    applyConfig(config);
+    
+    // Apply colors to DOM elements
+    const bgColor = config.background_color || defaultConfig.background_color;
+    const surfaceColor = config.surface_color || defaultConfig.surface_color;
+    const textColor = config.text_color || defaultConfig.text_color;
+    const primaryColor = config.primary_color || defaultConfig.primary_color;
+    const accentColor = config.accent_color || defaultConfig.accent_color;
+    
+    // Background
+    document.body.style.backgroundColor = bgColor;
+    
+    // Text color
+    document.querySelectorAll('.section-title, .data-table th').forEach(el => {
+      el.style.color = textColor;
+    });
+    
+    // Primary buttons and interactive elements
+    document.querySelectorAll('.btn-primary').forEach(el => {
+      el.style.background = `linear-gradient(135deg, ${primaryColor}, ${primaryColor}cc)`;
+    });
+    
+    // Accent color for gold elements and icons
+    document.querySelectorAll('[data-lucide="file-badge"]').forEach(el => {
+      el.parentElement.style.backgroundColor = accentColor;
+    });
+    
+    // Cards and surfaces
+    document.querySelectorAll('.card, .form-input, .modal').forEach(el => {
+      el.style.backgroundColor = surfaceColor;
+    });
+    
+    // Header styling
+    const header = document.querySelector('header');
+    if (header) {
+      header.style.backgroundColor = surfaceColor;
+      header.style.borderBottomColor = bgColor;
+    }
+    
+    // Table header background based on primary color
+    document.querySelectorAll('.data-table th').forEach(el => {
+      el.style.backgroundColor = primaryColor + '15';
+    });
+  },
+  mapToCapabilities: (config) => ({
+    recolorables: [
+      {
+        get: () => config.background_color || defaultConfig.background_color,
+        set: (v) => {
+          config.background_color = v;
+          window.elementSdk.setConfig({ background_color: v });
+        }
+      },
+      {
+        get: () => config.surface_color || defaultConfig.surface_color,
+        set: (v) => {
+          config.surface_color = v;
+          window.elementSdk.setConfig({ surface_color: v });
+        }
+      },
+      {
+        get: () => config.text_color || defaultConfig.text_color,
+        set: (v) => {
+          config.text_color = v;
+          window.elementSdk.setConfig({ text_color: v });
+        }
+      },
+      {
+        get: () => config.primary_color || defaultConfig.primary_color,
+        set: (v) => {
+          config.primary_color = v;
+          window.elementSdk.setConfig({ primary_color: v });
+        }
+      },
+      {
+        get: () => config.accent_color || defaultConfig.accent_color,
+        set: (v) => {
+          config.accent_color = v;
+          window.elementSdk.setConfig({ accent_color: v });
+        }
+      }
+    ],
+    borderables: [],
+    fontEditable: undefined,
+    fontSizeable: undefined
+  }),
+  mapToEditPanelValues: (config) => new Map([
+    ['system_title', config.system_title || defaultConfig.system_title],
+    ['fiscal_year', config.fiscal_year || defaultConfig.fiscal_year]
+  ])
+});
+
+// Clock
+function updateClock() {
+  const now = new Date();
+  const thaiMonths = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const d = now.getDate();
+  const m = thaiMonths[now.getMonth()];
+  const y = now.getFullYear() + 543;
+  document.getElementById('current-date').textContent = `${d} ${m} ${y}`;
+  document.getElementById('current-time').textContent = now.toLocaleTimeString('th-TH');
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// Navigation
+function showPage(page) {
+  document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+  document.getElementById('page-' + page).classList.remove('hidden');
+  document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-' + page).classList.add('active');
+  
+  // Close sidebar on mobile after nav
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar && sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+    document.querySelector('.sidebar-overlay').classList.remove('show');
+  }
+  
+  // Stop timer when leaving dashboard, start when entering
+  if (page === 'dashboard') {
+    loadDashboard();
+  } else {
+    stopAutoRefreshTimer();
+  }
+}
+
+// Mobile sidebar toggle
+document.addEventListener('DOMContentLoaded', function() {
+  const toggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.createElement('div');
+  overlay.className = 'sidebar-overlay';
+  document.body.appendChild(overlay);
+
+  toggle.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  });
+});
+
+// Clear form
+function clearForm() {
+  document.getElementById('mainForm').reset();
+  document.getElementById('s_receiveNo').value = '';
+  document.getElementById('s_workerID').value = '';
+  document.getElementById('searchResults').classList.add('hidden');
+  resetFormMode();
+}
+
+// Format Thai date-time
+function formatThaiDateTime(dateStr) {
+  if (!dateStr) return '-';
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    return `${d.getDate()} ${thaiMonths[d.getMonth()]} ${d.getFullYear()+543} ${d.toLocaleTimeString('th-TH')}`;
+  } catch(e) { return dateStr; }
+}
+
+function formatThaiDate(dateStr) {
+  if (!dateStr) return '-';
+  try {
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    return `${parseInt(parts[2])} ${thaiMonths[parseInt(parts[1])-1]} ${parseInt(parts[0])+543}`;
+  } catch(e) { return dateStr; }
+}
+
+// JSONP helper
+let jsonpCounter = 0;
+function jsonpRequest(url, params) {
+  return new Promise((resolve, reject) => {
+    const cbName = '_jsonpCb_' + (++jsonpCounter) + '_' + Date.now();
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      reject(new Error('Request timeout'));
+    }, 30000);
+
+    window[cbName] = function(data) {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      resolve(data);
+    };
+
+    const qs = new URLSearchParams(params);
+    qs.set('callback', cbName);
+    const script = document.createElement('script');
+    script.src = url + '?' + qs.toString();
+    script.onerror = function() {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      reject(new Error('Network error'));
+    };
+    document.body.appendChild(script);
+  });
+}
+
+// Submit form
+async function submitForm(e) {
+  e.preventDefault();
+  const receiveNo = document.getElementById('f_receiveNo').value.trim();
+  const workerID = document.getElementById('f_workerID').value.trim();
+  
+  if (!receiveNo) {
+    Swal.fire({ icon:'warning', title:'กรุณากรอกเลขรับที่', confirmButtonColor:'#1e40af' });
+    return;
+  }
+  
+  if (workerID && !workerID.match(/^RA\d{17}$/)) {
+    Swal.fire({ icon:'warning', title:'รูปแบบเลขประจำตัวแรงงานไม่ถูกต้อง', text:'ต้องขึ้นต้นด้วย RA และตัวเลข 17 หลัก', confirmButtonColor:'#1e40af' });
+    return;
+  }
+
+  const now = new Date();
+  const statusDateTime = formatThaiDateTime(now.toISOString());
+
+  const data = {
+    action: 'create',
+    order: document.getElementById('f_order').value.trim(),
+    receiveNo: receiveNo,
+    sbtDocNo: document.getElementById('f_sbtDocNo').value.trim(),
+    sbtDate: document.getElementById('f_sbtDate').value,
+    payer: document.getElementById('f_payer').value.trim(),
+    feeReceiptNo: document.getElementById('f_feeReceiptNo').value.trim(),
+    feeReceiptDate: document.getElementById('f_feeReceiptDate').value,
+    feeOfficer: document.getElementById('f_feeOfficer').value.trim(),
+    feeAmount: document.getElementById('f_feeAmount').value,
+    workerID: document.getElementById('f_workerID').value.trim(),
+    workerName: document.getElementById('f_workerName').value.trim(),
+    nationality: document.getElementById('f_nationality').value,
+    depositReceiptNo: document.getElementById('f_depositReceiptNo').value.trim(),
+    depositReceiptDate: document.getElementById('f_depositReceiptDate').value,
+    depositOfficer: document.getElementById('f_depositOfficer').value.trim(),
+    depositAmount: document.getElementById('f_depositAmount').value,
+    approvalDate: document.getElementById('f_approvalDate').value,
+    responsible: document.getElementById('f_responsible').value,
+    status: document.getElementById('f_status').value,
+    statusDateTime: statusDateTime,
+    remark: document.getElementById('f_remark').value.trim()
+  };
+
+  Swal.fire({ title:'กำลังบันทึกข้อมูล...', html:'กรุณารอสักครู่', allowOutsideClick:false, didOpen:()=>{ Swal.showLoading(); } });
+
+  try {
+    const result = await jsonpRequest(GAS_URL, data);
+    if (result && result.status === 'success') {
+      Swal.fire({ icon:'success', title:'บันทึกสำเร็จ!', text:'ข้อมูลถูกบันทึกลงฐานข้อมูลเรียบร้อยแล้ว', confirmButtonColor:'#1e40af', timer:2500 });
+      clearForm();
+    } else {
+      Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text: (result && result.message) || 'ไม่สามารถบันทึกข้อมูลได้', confirmButtonColor:'#1e40af' });
+    }
+  } catch(err) {
+    Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่', confirmButtonColor:'#1e40af' });
+  }
+}
+
+// Search data
+async function searchData() {
+  const receiveNo = document.getElementById('s_receiveNo').value.trim();
+  const workerID = document.getElementById('s_workerID').value.trim();
+  if (!receiveNo && !workerID) {
+    Swal.fire({ icon:'warning', title:'กรุณากรอกข้อมูลค้นหา', text:'กรอกเลขรับที่ หรือ เลขประจำตัวแรงงาน', confirmButtonColor:'#1e40af' });
+    return;
+  }
+  const params = { action:'search' };
+  if (receiveNo) params.receiveNo = receiveNo;
+  if (workerID) params.workerID = workerID;
+  await fetchAndRender(params);
+}
+
+async function loadAllData() {
+  await fetchAndRender({ action:'getAll' });
+}
+
+async function fetchAndRender(params) {
+  Swal.fire({ title:'กำลังโหลดข้อมูล...', html:'กรุณารอสักครู่', allowOutsideClick:false, didOpen:()=>{ Swal.showLoading(); } });
+  try {
+    const result = await jsonpRequest(GAS_URL, params);
+    Swal.close();
+    if (result && result.status === 'success' && Array.isArray(result.data)) {
+      searchDataCache = result.data;
+      editedRows = {};
+      const searchType = document.getElementById('s_workerID').value.trim() ? 'worker' : 'receipt';
+      renderSearchResults(result.data, searchType);
+    } else {
+      Swal.fire({ icon:'info', title:'ไม่พบข้อมูล', text:(result && result.message) || 'ไม่พบข้อมูลที่ค้นหา', confirmButtonColor:'#1e40af' });
+    }
+  } catch(err) {
+    Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', confirmButtonColor:'#1e40af' });
+  }
+}
+function getStatusBadge(status) {
+  const colors = {
+    'อยู่ระหว่างตรวจสอบข้อมูล': 'background:#fef3c7;color:#92400e;',
+    'อยู่ระหว่างประสานงานผู้แจ้ง': 'background:#dbeafe;color:#1e40af;',
+    'อยู่ระหว่างเสนอหนังสือพิจารณา/อนุมัติ': 'background:#ede9fe;color:#5b21b6;',
+    'อยู่ระหว่างพิจารณาจ่ายเงิน': 'background:#fce7f3;color:#9d174d;',
+    'ดำเนินการเสร็จสิ้น': 'background:#d1fae5;color:#065f46;'
+  };
+  return `<span class="badge" style="${colors[status] || 'background:#f1f5f9;color:#334155;'}">${status || '-'}</span>`;
+}
+
+function renderSearchResults(data, searchType = 'receipt') {
+  const container = document.getElementById('searchResults');
+  const tbody = document.getElementById('searchResultsBody');
+  document.getElementById('resultCount').textContent = data.length;
+  container.classList.remove('hidden');
+
+  // Show bulk status section ONLY for receipt search
+  const bulkSection = document.getElementById('bulkStatusSection');
+  const saveAllEditsBtn = container.querySelector('button[onclick="saveAllEdits()"]');
+  
+  if (searchType === 'receipt') {
+    bulkSection.classList.remove('hidden');
+    if (saveAllEditsBtn) saveAllEditsBtn.classList.remove('hidden');
+    
+    const bulkSelect = document.getElementById('bulkStatusSelect');
+    const currentValue = bulkSelect.value;
+    bulkSelect.innerHTML = '<option value="">-- เลือกสถานะ --</option>' +
+      systemSettings.statuses.map(s => `<option ${s===currentValue?'selected':''}>${s}</option>`).join('');
+    document.getElementById('bulkUpdateCount').textContent = data.length;
+  } else {
+    bulkSection.classList.add('hidden');
+    if (saveAllEditsBtn) saveAllEditsBtn.classList.add('hidden');
+  }
+
+  // Show edit column and status dropdown only for receipt search
+  if (searchType === 'receipt') {
+    tbody.innerHTML = data.map((row, i) => {
+      const rowNum = row.rowNumber || '';
+      const statusSelect = `<select class="form-input" style="min-width:180px;font-size:12px!important;" onchange="markEdited(${i}, this.value)" id="status_${i}">
+        ${systemSettings.statuses.map(s => `<option ${s===row.status?'selected':''}>${s}</option>`).join('')}
+      </select>`;
+
+      return `<tr>
+        <td>${row.order || '-'}</td>
+        <td class="font-semibold text-navy-700">${row.receiveNo || '-'}</td>
+        <td>${row.sbtDocNo || '-'}</td>
+        <td>${formatThaiDate(row.sbtDate) || '-'}</td>
+        <td>${row.payer || '-'}</td>
+        <td>${row.feeReceiptNo || '-'}</td>
+        <td>${formatThaiDate(row.feeReceiptDate) || '-'}</td>
+        <td>${row.feeOfficer || '-'}</td>
+        <td class="text-right">${row.feeAmount ? Number(row.feeAmount).toLocaleString('th-TH',{minimumFractionDigits:2,style:'decimal'}) + ' ฿' : '-'}</td>
+        <td class="font-semibold">${row.workerID || '-'}</td>
+        <td>${row.workerName || '-'}</td>
+        <td>${row.nationality || '-'}</td>
+        <td>${row.depositReceiptNo || '-'}</td>
+        <td>${formatThaiDate(row.depositReceiptDate) || '-'}</td>
+        <td>${row.depositOfficer || '-'}</td>
+        <td class="text-right">${row.depositAmount ? Number(row.depositAmount).toLocaleString('th-TH',{minimumFractionDigits:2,style:'decimal'}) + ' ฿' : '-'}</td>
+        <td>${formatThaiDate(row.approvalDate) || '-'}</td>
+        <td>${row.responsible || '-'}</td>
+        <td>${statusSelect}</td>
+        <td style="min-width:160px;font-size:12px;color:#64748b;">${row.statusDateTime || '-'}</td>
+        <td>${row.remark || '-'}</td>
+        <td><button onclick="editRow(${i})" class="text-blue-600 hover:text-blue-800 font-semibold text-xs underline">แก้ไข</button></td>
+      </tr>`;
+    }).join('');
+  } else {
+    // Worker search - simpler table without status column and bulk update
+    tbody.innerHTML = data.map((row, i) => {
+      return `<tr>
+        <td>${row.order || '-'}</td>
+        <td class="font-semibold text-navy-700">${row.receiveNo || '-'}</td>
+        <td>${row.sbtDocNo || '-'}</td>
+        <td>${formatThaiDate(row.sbtDate) || '-'}</td>
+        <td>${row.payer || '-'}</td>
+        <td>${row.feeReceiptNo || '-'}</td>
+        <td>${formatThaiDate(row.feeReceiptDate) || '-'}</td>
+        <td>${row.feeOfficer || '-'}</td>
+        <td class="text-right">${row.feeAmount ? Number(row.feeAmount).toLocaleString('th-TH',{minimumFractionDigits:2,style:'decimal'}) + ' ฿' : '-'}</td>
+        <td class="font-semibold">${row.workerID || '-'}</td>
+        <td>${row.workerName || '-'}</td>
+        <td>${row.nationality || '-'}</td>
+        <td>${row.depositReceiptNo || '-'}</td>
+        <td>${formatThaiDate(row.depositReceiptDate) || '-'}</td>
+        <td>${row.depositOfficer || '-'}</td>
+        <td class="text-right">${row.depositAmount ? Number(row.depositAmount).toLocaleString('th-TH',{minimumFractionDigits:2,style:'decimal'}) + ' ฿' : '-'}</td>
+        <td>${formatThaiDate(row.approvalDate) || '-'}</td>
+        <td>${row.responsible || '-'}</td>
+        <td>${row.status || '-'}</td>
+        <td style="min-width:160px;font-size:12px;color:#64748b;">${row.statusDateTime || '-'}</td>
+        <td>${row.remark || '-'}</td>
+        <td><button onclick="editRow(${i})" class="text-blue-600 hover:text-blue-800 font-semibold text-xs underline">แก้ไข</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  lucide.createIcons();
+
+// Initialize amount formatting after DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  formatAmountInput(document.getElementById('f_feeAmount'));
+  formatAmountInput(document.getElementById('f_depositAmount'));
+});
+}
+
+function markEdited(index, newStatus) {
+  editedRows[index] = newStatus;
+}
+
+function clearBulkStatus() {
+  document.getElementById('bulkStatusSelect').value = '';
+  document.getElementById('bulkStatusSection').classList.add('hidden');
+  editedRows = {};
+}
+
+async function applyBulkStatusUpdate() {
+  const newStatus = document.getElementById('bulkStatusSelect').value;
+  if (!newStatus) {
+    Swal.fire({ icon:'warning', title:'กรุณาเลือกสถานะ', confirmButtonColor:'#1e40af' });
+    return;
+  }
+
+  if (searchDataCache.length === 0) {
+    Swal.fire({ icon:'warning', title:'ไม่มีรายการให้อัปเดต', confirmButtonColor:'#1e40af' });
+    return;
+  }
+
+  const now = new Date();
+  const statusDateTime = formatThaiDateTime(now.toISOString());
+
+  // Create updates for all records in search cache
+  const updates = searchDataCache.map(row => ({
+    rowNumber: row.rowNumber,
+    status: newStatus,
+    statusDateTime: statusDateTime
+  }));
+
+  Swal.fire({ 
+    title:'ยืนยันการอัปเดต', 
+    text:`อัปเดตสถานะของ ${updates.length} รายการเป็น "${newStatus}"?`,
+    icon:'question',
+    showCancelButton:true,
+    confirmButtonText:'ยืนยัน',
+    cancelButtonText:'ยกเลิก',
+    confirmButtonColor:'#1e40af',
+    cancelButtonColor:'#64748b'
+  }).then(async (result) => {
+    if (!result.isConfirmed) return;
+
+    Swal.fire({ title:'กำลังอัปเดตข้อมูล...', html:`กำลังอัปเดต ${updates.length} รายการ`, allowOutsideClick:false, didOpen:()=>{ Swal.showLoading(); } });
+
+    try {
+      const result = await jsonpRequest(GAS_URL, {
+        action: 'updateMultiple',
+        updates: JSON.stringify(updates)
+      });
+      if (result && result.status === 'success') {
+        editedRows = {};
+        Swal.fire({ icon:'success', title:'บันทึกสำเร็จ!', text:`อัปเดตสถานะ ${updates.length} รายการเรียบร้อย`, confirmButtonColor:'#1e40af', timer:2500 });
+        // Clear search form and results
+        document.getElementById('s_receiveNo').value = '';
+        document.getElementById('s_workerID').value = '';
+        document.getElementById('searchResults').classList.add('hidden');
+        document.getElementById('bulkStatusSection').classList.add('hidden');
+        document.getElementById('bulkStatusSelect').value = '';
+      } else {
+        Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:(result && result.message) || 'ไม่สามารถบันทึกได้', confirmButtonColor:'#1e40af' });
+      }
+    } catch(err) {
+      Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', confirmButtonColor:'#1e40af' });
+    }
+  });
+}
+
+// Save all status edits
+async function saveAllEdits() {
+  const keys = Object.keys(editedRows);
+  if (keys.length === 0) {
+    Swal.fire({ icon:'info', title:'ไม่มีข้อมูลที่แก้ไข', text:'กรุณาเปลี่ยนสถานะก่อนบันทึก', confirmButtonColor:'#1e40af' });
+    return;
+  }
+
+  const now = new Date();
+  const statusDateTime = formatThaiDateTime(now.toISOString());
+
+  const updates = keys.map(i => ({
+    rowNumber: searchDataCache[i].rowNumber,
+    status: editedRows[i],
+    statusDateTime: statusDateTime
+  }));
+
+  Swal.fire({ title:'กำลังบันทึกการแก้ไข...', html:`กำลังอัปเดต ${updates.length} รายการ`, allowOutsideClick:false, didOpen:()=>{ Swal.showLoading(); } });
+
+  try {
+    const result = await jsonpRequest(GAS_URL, {
+      action: 'updateMultiple',
+      updates: JSON.stringify(updates)
+    });
+    if (result && result.status === 'success') {
+      editedRows = {};
+      Swal.fire({ icon:'success', title:'บันทึกสำเร็จ!', text:`อัปเดตสถานะ ${updates.length} รายการเรียบร้อย`, confirmButtonColor:'#1e40af', timer:2500 });
+      // Refresh
+      const receiveNo = document.getElementById('s_receiveNo').value.trim();
+      const workerID = document.getElementById('s_workerID').value.trim();
+      if (receiveNo || workerID) { searchData(); } else { loadAllData(); }
+    } else {
+      Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:(result && result.message) || 'ไม่สามารถบันทึกได้', confirmButtonColor:'#1e40af' });
+    }
+  } catch(err) {
+    Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', confirmButtonColor:'#1e40af' });
+  }
+}
+
+// Edit single row - open in form
+function editRow(index) {
+  const row = searchDataCache[index];
+  if (!row) return;
+
+  showPage('form');
+
+  document.getElementById('f_order').value = row.order || '';
+  document.getElementById('f_receiveNo').value = row.receiveNo || '';
+  document.getElementById('f_sbtDocNo').value = row.sbtDocNo || '';
+  document.getElementById('f_sbtDate').value = row.sbtDate || '';
+  document.getElementById('f_payer').value = row.payer || '';
+  document.getElementById('f_feeReceiptNo').value = row.feeReceiptNo || '';
+  document.getElementById('f_feeReceiptDate').value = row.feeReceiptDate || '';
+  document.getElementById('f_feeOfficer').value = row.feeOfficer || '';
+  document.getElementById('f_feeAmount').value = row.feeAmount || '';
+  document.getElementById('f_workerID').value = row.workerID || '';
+  document.getElementById('f_workerName').value = row.workerName || '';
+  document.getElementById('f_nationality').value = row.nationality || '';
+  document.getElementById('f_depositReceiptNo').value = row.depositReceiptNo || '';
+  document.getElementById('f_depositReceiptDate').value = row.depositReceiptDate || '';
+  document.getElementById('f_depositOfficer').value = row.depositOfficer || '';
+  document.getElementById('f_depositAmount').value = row.depositAmount || '';
+  document.getElementById('f_approvalDate').value = row.approvalDate || '';
+  document.getElementById('f_responsible').value = row.responsible || '';
+  document.getElementById('f_status').value = row.status || '';
+  document.getElementById('f_remark').value = row.remark || '';
+
+  // Change form to update mode - store row info but hide the "บันทึกการแก้ไขทั้งหมด" button
+  const btn = document.getElementById('btnSubmit');
+  btn.innerHTML = '<i data-lucide="refresh-cw" class="w-4 h-4"></i> อัปเดตข้อมูล';
+  btn.dataset.mode = 'update';
+  btn.dataset.rowNumber = row.rowNumber || '';
+
+  const form = document.getElementById('mainForm');
+  form.onsubmit = async function(e) {
+    e.preventDefault();
+    await updateFormData(row.rowNumber);
+  };
+
+  Swal.fire({ icon:'info', title:'โหมดแก้ไขข้อมูล', text:`กำลังแก้ไขเลขรับที่ ${row.receiveNo}`, confirmButtonColor:'#1e40af', timer:2000, showConfirmButton:false });
+
+  lucide.createIcons();
+}
+
+async function updateFormData(rowNumber) {
+  const now = new Date();
+  const statusDateTime = formatThaiDateTime(now.toISOString());
+
+  const data = {
+    action: 'update',
+    rowNumber: rowNumber,
+    order: document.getElementById('f_order').value.trim(),
+    receiveNo: document.getElementById('f_receiveNo').value.trim(),
+    sbtDocNo: document.getElementById('f_sbtDocNo').value.trim(),
+    sbtDate: document.getElementById('f_sbtDate').value,
+    payer: document.getElementById('f_payer').value.trim(),
+    feeReceiptNo: document.getElementById('f_feeReceiptNo').value.trim(),
+    feeReceiptDate: document.getElementById('f_feeReceiptDate').value,
+    feeOfficer: document.getElementById('f_feeOfficer').value.trim(),
+    feeAmount: document.getElementById('f_feeAmount').value,
+    workerID: document.getElementById('f_workerID').value.trim(),
+    workerName: document.getElementById('f_workerName').value.trim(),
+    nationality: document.getElementById('f_nationality').value,
+    depositReceiptNo: document.getElementById('f_depositReceiptNo').value.trim(),
+    depositReceiptDate: document.getElementById('f_depositReceiptDate').value,
+    depositOfficer: document.getElementById('f_depositOfficer').value.trim(),
+    depositAmount: document.getElementById('f_depositAmount').value,
+    approvalDate: document.getElementById('f_approvalDate').value,
+    responsible: document.getElementById('f_responsible').value,
+    status: document.getElementById('f_status').value,
+    statusDateTime: statusDateTime,
+    remark: document.getElementById('f_remark').value.trim()
+  };
+
+  Swal.fire({ title:'กำลังอัปเดตข้อมูล...', allowOutsideClick:false, didOpen:()=>{ Swal.showLoading(); } });
+
+  try {
+    const result = await jsonpRequest(GAS_URL, data);
+    if (result && result.status === 'success') {
+      Swal.fire({ icon:'success', title:'อัปเดตสำเร็จ!', confirmButtonColor:'#1e40af', timer:2000 });
+      resetFormMode();
+      clearForm();
+    } else {
+      Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:(result && result.message) || '', confirmButtonColor:'#1e40af' });
+    }
+  } catch(err) {
+    Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:'ไม่สามารถเชื่อมต่อได้', confirmButtonColor:'#1e40af' });
+  }
+}
+
+function resetFormMode() {
+  const btn = document.getElementById('btnSubmit');
+  btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> บันทึกข้อมูล';
+  btn.dataset.mode = 'create';
+  btn.dataset.rowNumber = '';
+  document.getElementById('mainForm').onsubmit = submitForm;
+  lucide.createIcons();
+}
+
+// Auto-refresh dashboard timer
+let autoRefreshInterval = null;
+let autoRefreshCountdown = 60;
+
+function startAutoRefreshTimer() {
+  const timerEl = document.getElementById('autoRefreshTimer');
+  if (!timerEl) return;
+  
+  autoRefreshCountdown = 60;
+  
+  if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+  
+  autoRefreshInterval = setInterval(() => {
+    autoRefreshCountdown--;
+    if (timerEl) timerEl.textContent = autoRefreshCountdown;
+    
+    if (autoRefreshCountdown <= 0) {
+      clearInterval(autoRefreshInterval);
+      // Auto-load dashboard if visible
+      const dashboardPage = document.getElementById('page-dashboard');
+      if (dashboardPage && !dashboardPage.classList.contains('hidden')) {
+        loadDashboard();
+      }
+      startAutoRefreshTimer();
+    }
+  }, 1000);
+}
+
+function stopAutoRefreshTimer() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+  }
+}
+
+// Dashboard - optimized
+async function loadDashboard() {
+  try {
+    const result = await jsonpRequest(GAS_URL, { action:'getAll' });
+    if (result && result.status === 'success' && Array.isArray(result.data)) {
+      const data = result.data;
+      const total = data.length;
+      
+      // Aggregate data in single pass
+      const statusMap = new Map();
+      let totalFee = 0, totalDeposit = 0;
+      
+      for (let i = 0; i < data.length; i++) {
+        const r = data[i];
+        const status = r.status || 'ไม่ระบุ';
+        const fee = parseFloat(r.feeAmount) || 0;
+        const deposit = parseFloat(r.depositAmount) || 0;
+        
+        if (!statusMap.has(status)) {
+          statusMap.set(status, { count: 0, fee: 0, deposit: 0 });
+        }
+        const stat = statusMap.get(status);
+        stat.count++;
+        stat.fee += fee;
+        stat.deposit += deposit;
+        totalFee += fee;
+        totalDeposit += deposit;
+      }
+
+      // Show cards and table immediately
+      const dashContent = document.getElementById('dashboardContent');
+      const cards = document.getElementById('dashboardCards');
+      dashContent.innerHTML = '';
+      
+      cards.innerHTML = `
+        <div class="card p-5 border-l-4 border-navy-500">
+          <div class="text-sm text-slate-500">จำนวนรายการทั้งหมด</div>
+          <div class="text-3xl font-bold text-navy-800 mt-1">${total.toLocaleString()}</div>
+        </div>
+        <div class="card p-5 border-l-4 border-gold-500">
+          <div class="text-sm text-slate-500">รวมค่าธรรมเนียม</div>
+          <div class="text-3xl font-bold text-navy-800 mt-1">${totalFee.toLocaleString('th-TH',{minimumFractionDigits:2})} ฿</div>
+        </div>
+        <div class="card p-5 border-l-4 border-emerald-500">
+          <div class="text-sm text-slate-500">รวมค่าหลักประกัน</div>
+          <div class="text-3xl font-bold text-navy-800 mt-1">${totalDeposit.toLocaleString('th-TH',{minimumFractionDigits:2})} ฿</div>
+        </div>
+        <div class="card p-5 border-l-4 border-green-500">
+          <div class="text-sm text-slate-500">รวมเงินทั้งหมด</div>
+          <div class="text-3xl font-bold text-green-700 mt-1">${(totalFee + totalDeposit).toLocaleString('th-TH',{minimumFractionDigits:2})} ฿</div>
+        </div>
+      `;
+      cards.classList.remove('hidden');
+
+      // Build table HTML
+      let tableHTML = '';
+      for (const [status, stat] of statusMap) {
+        const rowTotal = stat.fee + stat.deposit;
+        tableHTML += `<tr>
+          <td class="font-medium text-navy-700">${status}</td>
+          <td class="text-center font-semibold">${stat.count}</td>
+          <td class="text-right">${stat.fee.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+          <td class="text-right">${stat.deposit.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+          <td class="text-right font-semibold text-navy-800">${rowTotal.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+        </tr>`;
+      }
+      document.getElementById('statusTableBody').innerHTML = tableHTML;
+
+      // Show charts section
+      const chartsDiv = document.getElementById('dashboardCharts');
+      chartsDiv.classList.remove('hidden');
+
+      // Destroy and recreate chart only if needed
+      if (window.dashCharts && window.dashCharts.status) {
+        window.dashCharts.status.destroy();
+      }
+      if (!window.dashCharts) window.dashCharts = {};
+
+      // Chart data
+      const statusLabels = Array.from(statusMap.keys());
+      const statusData = Array.from(statusMap.values()).map(s => s.count);
+      const colors = ['#fbbf24', '#60a5fa', '#a78bfa', '#f472b6', '#4ade80', '#f87171', '#34d399', '#fcd34d', '#818cf8', '#f472b6'];
+
+      // Create chart with minimal config
+      requestAnimationFrame(() => {
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        window.dashCharts.status = new Chart(statusCtx, {
+          type: 'bar',
+          data: {
+            labels: statusLabels.map(l => l.length > 15 ? l.substring(0, 12) + '...' : l),
+            datasets: [{
+              label: 'จำนวนรายการ',
+              data: statusData,
+              backgroundColor: colors.slice(0, statusLabels.length),
+              borderColor: colors.slice(0, statusLabels.length),
+              borderWidth: 0,
+              borderRadius: 4,
+              barPercentage: 0.65
+            }]
+          },
+          options: {
+            indexAxis: 'x',
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 300 },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(30, 58, 138, 0.95)',
+                callbacks: {
+                  label: context => 'จำนวน: ' + context.parsed.y + ' รายการ'
+                }
+              }
+            },
+            scales: {
+              y: { 
+                beginAtZero: true,
+                ticks: { stepSize: 1 },
+                grid: { color: '#f1f5f9' }
+              },
+              x: {
+                grid: { display: false }
+              }
+            }
+          }
+        });
+        lucide.createIcons();
+        // Start the auto-refresh timer when dashboard is loaded
+        startAutoRefreshTimer();
+      });
+    }
+  } catch(err) {
+    console.error('Dashboard error:', err);
+  }
+}
+
+lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e5d02589605a1b0',t:'MTc3NTEwMzI5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
