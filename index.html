@@ -163,7 +163,7 @@ button:active::before { width: 200px; height: 200px; }
     </div>
     <nav class="flex-1 py-4 overflow-y-auto">
      <p class="px-5 text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">เมนูหลัก</p><button onclick="switchPage('entry')" id="nav-entry" class="sidebar-item active w-full flex items-center gap-3 text-left"> <i data-lucide="plus-circle" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">บันทึกข้อมูล</span> </button> <button onclick="switchPage('search')" id="nav-search" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="search" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">เรียกดูข้อมูล</span> </button> <button onclick="switchPage('report')" id="nav-report" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">รายงาน</span> </button>
-     <p class="px-5 text-xs uppercase tracking-widest text-slate-400 font-bold mb-3 mt-5">ระบบ</p><button onclick="switchPage('database')" id="nav-database" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="database" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">ฐานข้อมูล</span> </button><button onclick="switchPage('addOfficer')" id="nav-addOfficer" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="user-plus" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">เพิ่มเจ้าหน้าที่</span> </button>
+     <p class="px-5 text-xs uppercase tracking-widest text-slate-400 font-bold mb-3 mt-5">ระบบ</p><button onclick="switchPage('database')" id="nav-database" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="database" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">ฐานข้อมูล</span> </button>
     </nav>
     <div class="p-4 border-t border-slate-700 text-xs text-slate-400 text-center flex-shrink-0 font-medium">
      © 2569 eWorkPermit System
@@ -240,7 +240,9 @@ button:active::before { width: 200px; height: 200px; }
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <div><label class="block text-xs font-medium text-slate-600 mb-1">วันที่ขออนุมัติ (วันที่ทางคลังอนุมัติให้จ่ายเงิน)</label> <input type="date" id="f_approveDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">เจ้าหน้าที่ผู้รับผิดชอบ</label> <select id="f_responsible" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกเจ้าหน้าที่ --</option> </select>
+        <div><label class="block text-xs font-medium text-slate-600 mb-1">เจ้าหน้าที่ผู้รับผิดชอบ</label>
+         <div class="flex gap-2"><select id="f_responsible" class="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกเจ้าหน้าที่ --</option> <option value="__add__">+ เพิ่มเจ้าหน้าที่อื่น</option> </select> <button type="button" id="btn_add_officer_inline" onclick="addOfficerInline()" class="px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition hidden flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i></button>
+         </div><input type="text" id="f_responsible_custom" placeholder="พิมพ์ชื่อใหม่" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus hidden mt-2">
         </div>
         <div><label class="block text-xs font-medium text-slate-600 mb-1">สถานะการดำเนินการ</label> <select id="f_status" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกสถานะ --</option> </select>
         </div>
@@ -501,14 +503,17 @@ function renderOfficerSelect() {
   const f_responsible = document.getElementById('f_responsible');
   if (f_responsible) {
     const val = f_responsible.value;
-    f_responsible.innerHTML = '<option value="">-- เลือกเจ้าหน้าที่ --</option>';
+    f_responsible.innerHTML = '<option value="">-- เลือกเจ้าหน้าที่ --</option><option value="__add__">+ เพิ่มเจ้าหน้าที่อื่น</option>';
     officers.forEach(o => {
       const opt = document.createElement('option');
       opt.value = o;
       opt.textContent = o;
       f_responsible.appendChild(opt);
     });
-    f_responsible.value = val;
+    // Keep previous selection if it still exists, otherwise keep "add" option visible
+    if (val && val !== '__add__') {
+      f_responsible.value = officers.includes(val) ? val : '';
+    }
   }
   
   const editSelect = document.getElementById('edit_responsible');
@@ -523,6 +528,58 @@ function renderOfficerSelect() {
     });
     editSelect.value = val;
   }
+}
+
+// Handle officer dropdown change
+document.addEventListener('DOMContentLoaded', () => {
+  const f_responsible = document.getElementById('f_responsible');
+  if (f_responsible) {
+    f_responsible.addEventListener('change', (e) => {
+      const customInput = document.getElementById('f_responsible_custom');
+      const addBtn = document.getElementById('btn_add_officer_inline');
+      if (e.target.value === '__add__') {
+        customInput.classList.remove('hidden');
+        addBtn.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+        addBtn.classList.add('hidden');
+        customInput.value = '';
+      }
+    });
+  }
+});
+
+function addOfficerInline() {
+  const customInput = document.getElementById('f_responsible_custom');
+  const name = customInput.value.trim();
+  
+  if (!name) {
+    showModal('error', 'ข้อผิดพลาด', 'กรุณากรอกชื่อเจ้าหน้าที่');
+    return;
+  }
+  
+  if (officers.includes(name)) {
+    showModal('error', 'ข้อผิดพลาด', 'เจ้าหน้าที่รายนี้มีอยู่แล้ว');
+    return;
+  }
+  
+  // Add to list
+  officers.push(name);
+  saveSettingsToStorage();
+  renderOfficerSelect();
+  
+  // Set as selected
+  const f_responsible = document.getElementById('f_responsible');
+  f_responsible.value = name;
+  
+  // Hide input and button
+  customInput.classList.add('hidden');
+  customInput.value = '';
+  document.getElementById('btn_add_officer_inline').classList.add('hidden');
+  
+  showModal('success', 'เพิ่มสำเร็จ', `เจ้าหน้าที่ "${name}" ได้ถูกเพิ่มเข้าระบบแล้ว และเลือกให้เป็นผู้รับผิดชอบ`);
+  lucide.createIcons();
 }
 
 function renderStatusSelect() {
@@ -1552,32 +1609,19 @@ window.addEventListener('resize', throttledResize);
 window.addEventListener('orientationchange', throttledResize);
 handleResize();
 
-// Optimize icon rendering
+// Lazy load icons only when needed
 let iconInitialized = false;
 function lazyInitIcons() {
   if (!iconInitialized && window.lucide) {
     iconInitialized = true;
-    lucide.createIcons();
+    requestAnimationFrame(() => lucide.createIcons());
   }
 }
 
-// Start initialization immediately if DOM is ready
-function deferredInit() {
-  init();
-  // Render icons after DOM is stable
-  if (document.readyState === 'complete') {
-    lazyInitIcons();
-  } else {
-    window.addEventListener('load', lazyInitIcons, { once: true });
-  }
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', deferredInit);
-} else {
-  deferredInit();
-}
+// Initialize ASAP - before full DOM load
+init();
+lazyInitIcons();
 
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e80d154c18f45c4',t:'MTc3NTQ3ODc3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e80e4bf15e245c4',t:'MTc3NTQ3OTU2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
