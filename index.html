@@ -2,7 +2,10 @@
 <html lang="th" class="h-full">
  <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="true">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="eWorkPermit">
   <title>ระบบทะเบียนคุม eWorkPermit</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
@@ -18,8 +21,12 @@ tailwind.config = {
 }
 </script>
   <style>
-* { font-family: 'Noto Sans Thai', sans-serif; }
-html, body { height: 100%; width: 100%; }
+* { font-family: 'Noto Sans Thai', sans-serif; box-sizing: border-box; }
+html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+body { -webkit-touch-callout: none; -webkit-user-select: none; }
+input, textarea, select { -webkit-appearance: none; -webkit-user-select: text; }
+input[type="button"], input[type="submit"], button { -webkit-appearance: none; }
+
 .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .spin { animation: spin 1s linear infinite; }
@@ -28,42 +35,77 @@ html, body { height: 100%; width: 100%; }
 @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
 .modal-content { animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
 @keyframes modalIn { from { opacity: 0; transform: scale(0.92) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
 input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
 .sidebar-item { transition: all 0.25s ease; color: rgba(255,255,255,0.85); }
-.sidebar-item:hover { background: rgba(59, 130, 246, 0.2); color: rgba(255,255,255,1); border-radius: 10px; margin: 0 8px; padding-left: 16px; padding-right: 16px; }
+.sidebar-item:hover, .sidebar-item:active { background: rgba(59, 130, 246, 0.2); color: rgba(255,255,255,1); border-radius: 10px; margin: 0 8px; padding-left: 16px; padding-right: 16px; }
 .sidebar-item.active { background: linear-gradient(90deg, rgba(59, 130, 246, 0.3), rgba(99, 102, 241, 0.15)); color: #60a5fa; border-right: 3px solid #60a5fa; border-radius: 10px; margin: 0 8px; padding-left: 16px; }
+
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.6); }
+
 .input-focus { transition: all 0.25s ease; border-color: #e2e8f0; }
 .input-focus:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08), 0 0 0 1px #3b82f6, inset 0 1px 2px rgba(0,0,0,0.02); }
+
 .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 @media (hover: hover) {
   .card-hover:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1); }
 }
+
 .btn-shadow { box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25); transition: all 0.2s ease; }
 @media (hover: hover) {
   .btn-shadow:hover { box-shadow: 0 8px 28px rgba(37, 99, 235, 0.35); transform: translateY(-1px); }
 }
+
 .status-badge { display: inline-block; padding: 6px 14px; border-radius: 24px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; }
 .section-title { position: relative; padding-bottom: 14px; }
 .section-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: linear-gradient(90deg, #3b82f6, #6366f1, #3b82f6); border-radius: 2px; }
-button { position: relative; overflow: hidden; }
+
+button { position: relative; overflow: hidden; min-height: 44px; }
 button::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255,255,255,0.3); transform: translate(-50%, -50%); transition: width 0.5s, height 0.5s; }
 button:active::before { width: 200px; height: 200px; }
 
+/* Desktop optimization */
+@media (min-width: 1024px) {
+  .page { padding: 2rem 3rem !important; max-width: 100% !important; }
+  .card-hover { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
+  .card-hover:hover { box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12); transform: translateY(-2px); }
+  table { font-size: 0.875rem; }
+  table th { background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 100%); font-weight: 700; letter-spacing: 0.3px; }
+  table tbody tr { transition: all 0.2s ease; }
+  table tbody tr:hover { background: linear-gradient(90deg, #f0f9ff 0%, #f5f3ff 100%); box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.1); }
+  .grid { gap: 1.5rem !important; }
+  input, select, textarea { font-size: 0.95rem; }
+  button { padding: 0.75rem 1.5rem; font-size: 0.95rem; }
+  .section-title::after { width: 50px; height: 3px; }
+}
+
+/* Tablet optimization */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .page { padding: 1.5rem 2rem !important; }
+  .grid { gap: 1rem !important; }
+  table { font-size: 0.8rem; }
+  table th, table td { padding: 0.75rem !important; }
+}
+
 /* Mobile optimization */
 @media (max-width: 768px) {
+  html, body { width: 100vw; height: 100vh; }
+  #app { width: 100%; height: 100%; }
   .page { padding: 0.75rem !important; }
-  input, select, textarea { font-size: 16px; } /* Prevent zoom on iOS */
+  input, select, textarea { font-size: 16px; -webkit-appearance: none; appearance: none; } /* Prevent iOS zoom */
   .grid { gap: 0.75rem !important; }
-  .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+  .overflow-x-auto { -webkit-overflow-scrolling: touch; overflow-x: auto; }
   table { font-size: 0.75rem; }
   table th, table td { padding: 0.5rem !important; }
-  button { padding: 0.625rem 0.75rem; font-size: 0.875rem; }
-  .modal-content { max-height: 85vh !important; margin: 1rem; }
+  button { padding: 0.625rem 0.75rem; font-size: 0.875rem; min-height: 44px; }
+  .modal-content { max-height: 85vh !important; margin: 1rem; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .section-title::after { width: 35px; }
+  .w-64 { width: 100vw !important; max-width: 85vw; }
 }
 
 @media (max-width: 640px) {
@@ -71,23 +113,43 @@ button:active::before { width: 200px; height: 200px; }
   .text-2xl { font-size: 1.5rem; }
   .px-5 { padding-left: 0.75rem; padding-right: 0.75rem; }
   .py-2.5 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-  button { min-height: 44px; } /* Touch target */
+  button { min-height: 44px; padding: 0.625rem 0.75rem; }
   label { font-size: 0.75rem; }
+  .page { padding: 0.5rem !important; }
+  main { overflow: hidden; }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  input, textarea, select { font-size: 16px !important; }
+  body { -webkit-user-select: none; }
+  input, textarea, select, button { -webkit-user-select: text; }
+  .modal-content { max-height: 80vh; }
+  #mobileToggle { padding: 0.5rem; right: 0.75rem; }
 }
 
 /* Touch-friendly adjustments */
 @media (hover: none) and (pointer: coarse) {
-  button, select, input[type="button"], input[type="submit"] { min-height: 48px; padding: 0.75rem 1rem; }
+  button, select, input[type="button"], input[type="submit"] { min-height: 48px; padding: 0.75rem 1rem; font-size: 1rem; }
+  .sidebar-item { padding: 0.625rem 1rem; }
   .sidebar-item:active { background: rgba(59, 130, 246, 0.3); }
+  table th, table td { padding: 0.75rem 0.5rem !important; }
+  input, select, textarea { padding: 0.75rem; font-size: 16px; }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  body { padding-left: max(0px, env(safe-area-inset-left)); padding-right: max(0px, env(safe-area-inset-right)); }
+  #app { padding-top: max(0px, env(safe-area-inset-top)); }
 }
 </style>
   <style>body { box-sizing: border-box; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full bg-slate-50">
-  <div id="app" class="h-full w-full flex overflow-hidden">
+  <div id="app" class="h-full w-full flex overflow-hidden lg:overflow-auto">
    <!-- Sidebar -->
-   <aside id="sidebar" class="w-64 bg-gradient-to-b from-slate-800 via-slate-900 to-indigo-950 text-white flex-shrink-0 flex flex-col shadow-xl z-30 overflow-y-auto">
+   <aside id="sidebar" class="w-64 bg-gradient-to-b from-slate-800 via-slate-900 to-indigo-950 text-white flex-shrink-0 flex flex-col shadow-xl z-40 overflow-y-auto lg:relative lg:translate-x-0 lg:static lg:z-0 transition-transform duration-300" style="position: fixed; left: 0; top: 0; height: 100%; max-height: 100vh; -webkit-transform: translateZ(0); transform: translateZ(0); -webkit-overflow-scrolling: touch;">
     <div class="p-4 border-b border-white/10 flex-shrink-0">
      <div class="flex items-center gap-2 mb-1">
       <div class="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -106,19 +168,19 @@ button:active::before { width: 200px; height: 200px; }
     <div class="p-3 border-t border-white/10 text-[10px] text-slate-500 text-center flex-shrink-0">
      © 2569 eWorkPermit System
     </div>
-   </aside><!-- Mobile toggle --> <button id="mobileToggle" onclick="toggleSidebar()" class="fixed top-3 left-3 z-40 lg:hidden bg-slate-800 text-white p-2 rounded-lg shadow-lg"> <i data-lucide="menu" class="w-5 h-5"></i> </button> <!-- Main Content -->
-   <main class="flex-1 overflow-y-auto h-full">
+   </aside><!-- Mobile toggle --> <button id="mobileToggle" onclick="toggleSidebar()" class="fixed top-3 left-3 z-40 lg:hidden bg-slate-800 text-white p-2.5 rounded-lg shadow-lg hover:bg-slate-700 transition"> <i data-lucide="menu" class="w-5 h-5"></i> </button> <!-- Main Content -->
+   <main class="flex-1 overflow-y-auto h-full w-full lg:w-auto lg:flex-1 transition-all duration-300" style="-webkit-overflow-scrolling: touch;">
     <!-- PAGE: ENTRY -->
-    <div id="page-entry" class="page fade-in p-4 md:p-6 w-full max-w-6xl mx-auto">
+    <div id="page-entry" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full" style="min-height: 100%; background: inherit;">
      <div class="mb-5">
-      <h2 class="text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-2"><i data-lucide="file-plus" class="w-5 h-5 md:w-6 md:h-6 text-blue-600"></i> <span id="mainTitle">บันทึกข้อมูลทะเบียนคุมการจ่ายคืนค่าธรรมเนียม</span></h2>
-      <p class="text-sm text-slate-500 mt-1" id="subTitle">ระบบทะเบียนคุมการจ่ายคืนค่าธรรมเนียมใบอนุญาตทำงาน และเงินหลักประกันการอนุญาตทำงานของคนต่างด้าวรายตัว</p>
+      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-2"><i data-lucide="file-plus" class="w-5 h-5 md:w-6 md:h-6 text-blue-600"></i> <span id="mainTitle">บันทึกข้อมูลทะเบียนคุมการจ่ายคืนค่าธรรมเนียม</span></h2>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1" id="subTitle">ระบบทะเบียนคุมการจ่ายคืนค่าธรรมเนียมใบอนุญาตทำงาน และเงินหลักประกันการอนุญาตทำงานของคนต่างด้าวรายตัว</p>
      </div>
      <form id="entryForm" onsubmit="return false;">
       <!-- ส่วนข้อมูลทั่วไป -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4 card-hover">
-       <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="clipboard-list" class="w-5 h-5 text-indigo-500"></i> ข้อมูลทั่วไป</h3>
-       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
+       <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="clipboard-list" class="w-5 h-5 text-indigo-500"></i> ข้อมูลทั่วไป</h3>
+       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div>
          <label class="block text-xs font-medium text-slate-600 mb-1">ลำดับที่</label> <input type="text" id="f_seq" readonly value="(ระบบบันทึกอัตโนมัติ)" class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500 cursor-not-allowed input-focus">
         </div>
@@ -133,17 +195,17 @@ button:active::before { width: 200px; height: 200px; }
         </div>
        </div>
       </div><!-- ผู้ชำระเงิน -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4">
-       <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"><i data-lucide="user" class="w-5 h-5 text-indigo-500"></i> ผู้ชำระเงิน (นายจ้าง/บนจ.)</h3>
+      <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4">
+       <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"><i data-lucide="user" class="w-5 h-5 text-indigo-500"></i> ผู้ชำระเงิน (นายจ้าง/บนจ.)</h3>
        <div class="grid grid-cols-1 gap-4">
         <div>
          <label class="block text-xs font-medium text-slate-600 mb-1">ชื่อผู้ชำระเงิน (นายจ้าง/บนจ.)</label> <input type="text" id="f_payer" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
        </div>
       </div><!-- ค่าธรรมเนียมใบอนุญาตทำงาน -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4 card-hover">
-       <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="receipt" class="w-5 h-5 text-green-500"></i> ข้อมูลค่าธรรมเนียมใบอนุญาตทำงาน</h3>
-       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
+       <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="receipt" class="w-5 h-5 text-green-500"></i> ข้อมูลค่าธรรมเนียมใบอนุญาตทำงาน</h3>
+       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div>
          <label class="block text-xs font-medium text-slate-600 mb-1">เลขที่ใบเสร็จรับเงิน</label> <input type="text" id="f_feeReceiptNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
@@ -158,9 +220,9 @@ button:active::before { width: 200px; height: 200px; }
         </div>
        </div>
       </div><!-- ข้อมูลแรงงานต่างด้าว -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4 card-hover">
-       <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="users" class="w-5 h-5 text-orange-500"></i> ข้อมูลแรงงานต่างด้าว</h3>
-       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
+       <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="users" class="w-5 h-5 text-orange-500"></i> ข้อมูลแรงงานต่างด้าว</h3>
+       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <div>
          <label class="block text-xs font-medium text-slate-600 mb-1">เลขประจำตัวแรงงาน / เลขอ้างอิง</label> <input type="text" id="f_workerId" maxlength="19" oninput="formatWorkerId(this)" placeholder="RA+ตัวเลข17หลัก" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus font-mono tracking-wide">
          <p class="text-[10px] text-slate-400 mt-0.5">รูปแบบ: RA แล้วตามด้วยตัวเลข 17 หลัก</p>
@@ -174,9 +236,9 @@ button:active::before { width: 200px; height: 200px; }
         </div>
        </div>
       </div><!-- ค่าหลักประกัน -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4 card-hover">
-       <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="shield" class="w-5 h-5 text-purple-500"></i> ข้อมูลค่าหลักประกัน</h3>
-       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
+       <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="shield" class="w-5 h-5 text-purple-500"></i> ข้อมูลค่าหลักประกัน</h3>
+       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div>
          <label class="block text-xs font-medium text-slate-600 mb-1">เลขที่ใบเสร็จรับเงิน</label> <input type="text" id="f_gReceiptNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
@@ -191,9 +253,9 @@ button:active::before { width: 200px; height: 200px; }
         </div>
        </div>
       </div><!-- การอนุมัติและสถานะ -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4 card-hover">
-       <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="check-circle" class="w-5 h-5 text-teal-500"></i> การอนุมัติและสถานะ</h3>
-       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
+       <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="check-circle" class="w-5 h-5 text-teal-500"></i> การอนุมัติและสถานะ</h3>
+       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <div>
          <label class="block text-xs font-medium text-slate-600 mb-1">วันที่ขออนุมัติ (วันที่ทางคลังอนุมัติให้จ่ายเงิน)</label> <input type="date" id="f_approveDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
@@ -206,17 +268,17 @@ button:active::before { width: 200px; height: 200px; }
         <div>
          <label class="block text-xs font-medium text-slate-600 mb-1">วันเวลาที่แจ้งสถานะล่าสุด</label> <input type="text" id="f_statusDate" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500 cursor-not-allowed input-focus">
         </div>
-        <div class="md:col-span-2">
+        <div class="sm:col-span-2">
          <label class="block text-xs font-medium text-slate-600 mb-1">หมายเหตุ</label> <textarea id="f_remark" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus resize-none"></textarea>
         </div>
        </div>
       </div><!-- Buttons -->
-      <div class="flex flex-wrap gap-3 justify-end mb-8">
-       <button type="button" onclick="clearForm()" class="px-5 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-sm font-medium hover:bg-slate-300 transition flex items-center gap-2"> <i data-lucide="rotate-ccw" class="w-4 h-4"></i> ล้างฟอร์ม </button> <button type="button" id="btnSave" onclick="saveData()" class="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"> <i data-lucide="save" class="w-4 h-4"></i> <span>บันทึกข้อมูล</span> </button>
+      <div class="flex flex-wrap gap-2 sm:gap-3 justify-end mb-8">
+       <button type="button" onclick="clearForm()" class="px-4 sm:px-5 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-sm font-medium hover:bg-slate-300 transition flex items-center gap-2"> <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span>ล้าง</span> </button> <button type="button" id="btnSave" onclick="saveData()" class="px-5 sm:px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"> <i data-lucide="save" class="w-4 h-4"></i> <span>บันทึก</span> </button>
       </div>
      </form>
     </div><!-- PAGE: SEARCH -->
-    <div id="page-search" class="page fade-in p-4 md:p-6 w-full max-w-6xl mx-auto hidden">
+    <div id="page-search" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full hidden" style="min-height: 100%; background: inherit;">
      <div class="mb-5">
       <h2 class="text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-2"><i data-lucide="search" class="w-5 h-5 md:w-6 md:h-6 text-blue-600"></i> เรียกดูข้อมูลจากฐานข้อมูล</h2>
      </div>
@@ -278,7 +340,7 @@ button:active::before { width: 200px; height: 200px; }
       </div>
      </div>
     </div><!-- PAGE: REPORT -->
-    <div id="page-report" class="page fade-in p-4 md:p-6 w-full max-w-6xl mx-auto hidden">
+    <div id="page-report" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full hidden" style="min-height: 100%; background: inherit;">
      <div class="mb-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div>
        <h2 class="text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-5 h-5 md:w-6 md:h-6 text-blue-600"></i> รายงานสรุป</h2>
@@ -299,7 +361,7 @@ button:active::before { width: 200px; height: 200px; }
       </div>
      </div>
     </div><!-- PAGE: SETTINGS -->
-    <div id="page-settings" class="page fade-in p-4 md:p-6 w-full max-w-4xl mx-auto hidden">
+    <div id="page-settings" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full hidden" style="min-height: 100%; background: inherit;">
      <div class="mb-5">
       <h2 class="text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 md:w-6 md:h-6 text-blue-600"></i> ตั้งค่าระบบ</h2>
      </div><!-- Officers -->
@@ -318,7 +380,7 @@ button:active::before { width: 200px; height: 200px; }
       <div id="statusList" class="space-y-1"></div>
      </div>
     </div><!-- PAGE: DATABASE -->
-    <div id="page-database" class="page fade-in p-4 md:p-6 w-full max-w-6xl mx-auto hidden">
+    <div id="page-database" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full hidden" style="min-height: 100%; background: inherit;">
      <div class="mb-5">
       <h2 class="text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-2"><i data-lucide="database" class="w-5 h-5 md:w-6 md:h-6 text-blue-600"></i> ฐานข้อมูล Google Sheet</h2>
       <p class="text-sm text-slate-500 mt-1">เลือกฐานข้อมูล Google Sheet เพื่อนำเข้าข้อมูล</p>
@@ -1419,5 +1481,5 @@ handleResize();
 init();
 lucide.createIcons();
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e791df9665510de',t:'MTc3NTM5ODAyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e7f042367b44ba0',t:'MTc3NTQ1OTg4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
