@@ -163,7 +163,7 @@ button:active::before { width: 200px; height: 200px; }
     </div>
     <nav class="flex-1 py-4 overflow-y-auto">
      <p class="px-5 text-xs uppercase tracking-widest text-slate-400 font-bold mb-3">เมนูหลัก</p><button onclick="switchPage('entry')" id="nav-entry" class="sidebar-item active w-full flex items-center gap-3 text-left"> <i data-lucide="plus-circle" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">บันทึกข้อมูล</span> </button> <button onclick="switchPage('search')" id="nav-search" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="search" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">เรียกดูข้อมูล</span> </button> <button onclick="switchPage('report')" id="nav-report" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">รายงาน</span> </button>
-     <p class="px-5 text-xs uppercase tracking-widest text-slate-400 font-bold mb-3 mt-5">ระบบ</p><button onclick="switchPage('database')" id="nav-database" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="database" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">ฐานข้อมูล</span> </button>
+     <p class="px-5 text-xs uppercase tracking-widest text-slate-400 font-bold mb-3 mt-5">ระบบ</p><button onclick="switchPage('database')" id="nav-database" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="database" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">ฐานข้อมูล</span> </button> <button onclick="switchPage('settings')" id="nav-settings" class="sidebar-item w-full flex items-center gap-3 text-left"> <i data-lucide="settings" class="w-4 h-4 text-blue-400 flex-shrink-0"></i> <span class="truncate font-medium">ตั้งค่า</span> </button>
     </nav>
     <div class="p-4 border-t border-slate-700 text-xs text-slate-400 text-center flex-shrink-0 font-medium">
      © 2569 eWorkPermit System
@@ -626,7 +626,33 @@ function renderStatusSelect() {
 }
 
 function renderSettingsLists() {
-  // Removed: rendering of officer/status lists
+  // Render officers list
+  const officersList = document.getElementById('officersList');
+  if (officersList) {
+    officersList.innerHTML = officers.map((o, i) => `
+      <div class="flex items-center justify-between bg-slate-50 p-3 rounded-lg border border-slate-200 hover:bg-slate-100 transition">
+        <span class="text-sm text-slate-700 font-medium">${o}</span>
+        <button onclick="removeOfficer(${i})" class="px-3 py-1.5 bg-red-100 text-red-600 rounded-lg text-xs font-medium hover:bg-red-200 transition flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3 h-3"></i> ลบ
+        </button>
+      </div>
+    `).join('');
+    lucide.createIcons();
+  }
+
+  // Render status list
+  const statusList = document.getElementById('statusList');
+  if (statusList) {
+    statusList.innerHTML = statuses.map((s, i) => `
+      <div class="flex items-center justify-between bg-slate-50 p-3 rounded-lg border border-slate-200 hover:bg-slate-100 transition">
+        <span class="text-sm text-slate-700 font-medium">${s}</span>
+        <button onclick="removeStatus(${i})" class="px-3 py-1.5 bg-red-100 text-red-600 rounded-lg text-xs font-medium hover:bg-red-200 transition flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3 h-3"></i> ลบ
+        </button>
+      </div>
+    `).join('');
+    lucide.createIcons();
+  }
 }
 
 function addOfficer() {
@@ -638,6 +664,17 @@ function addOfficer() {
   renderOfficerSelect();
   renderSettingsLists();
   showModal('success', 'สำเร็จ', `เพิ่มเจ้าหน้าที่ "${v}" แล้ว`);
+}
+function quickAddOfficer() {
+  const v = document.getElementById('newOfficerInput').value.trim();
+  if (!v) { showModal('error', 'ข้อผิดพลาด', 'กรุณากรอกชื่อเจ้าหน้าที่'); return; }
+  if (officers.includes(v)) { showModal('error', 'ข้อผิดพลาด', 'เจ้าหน้าที่รายนี้มีอยู่แล้ว'); return; }
+  officers.push(v);
+  document.getElementById('newOfficerInput').value = '';
+  saveSettingsToStorage();
+  renderOfficerSelect();
+  renderSettingsLists();
+  showModal('success', 'เพิ่มสำเร็จ', `เจ้าหน้าที่ "${v}" ถูกเพิ่มแล้ว`);
 }
 
 function saveNewOfficer() {
@@ -655,7 +692,7 @@ function saveNewOfficer() {
   saveSettingsToStorage();
   renderOfficerSelect();
   renderSettingsLists();
-  showModal('success', 'บันทึกสำเร็จ', `เจ้าหน้าที่ "${v}" ถูกบันทึกแล้ว และเพิ่มเข้าในรายชื่อแล้ว`);
+  showModal('success', 'บันทึกสำเร็จ', `เจ้าหน้าที่ "${v}" ถูกบันทึกแล้ว`);
 }
 
 function removeOfficer(i) {
@@ -676,6 +713,18 @@ function addStatus() {
   renderStatusSelect();
   renderSettingsLists();
   showModal('success', 'สำเร็จ', `เพิ่มสถานะ "${v}" แล้ว`);
+}
+
+function quickAddStatus() {
+  const v = document.getElementById('newStatusInput').value.trim();
+  if (!v) { showModal('error', 'ข้อผิดพลาด', 'กรุณากรอกชื่อสถานะ'); return; }
+  if (statuses.includes(v)) { showModal('error', 'ข้อผิดพลาด', 'สถานะนี้มีอยู่แล้ว'); return; }
+  statuses.push(v);
+  document.getElementById('newStatusInput').value = '';
+  saveSettingsToStorage();
+  renderStatusSelect();
+  renderSettingsLists();
+  showModal('success', 'เพิ่มสำเร็จ', `สถานะ "${v}" ถูกเพิ่มแล้ว`);
 }
 
 function saveNewStatus() {
@@ -1623,5 +1672,5 @@ init();
 lazyInitIcons();
 
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e80e4bf15e245c4',t:'MTc3NTQ3OTU2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e80f006c56b3e68',t:'MTc3NTQ4MDAyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
