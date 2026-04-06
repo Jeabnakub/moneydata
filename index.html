@@ -149,11 +149,13 @@ button:active::before { width: 200px; height: 200px; }
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-  <div id="app" class="h-full w-full flex overflow-hidden lg:overflow-auto"><!-- Sidebar -->
+  <div id="app" class="h-full w-full flex overflow-hidden lg:overflow-auto">
+   <!-- Sidebar -->
    <aside id="sidebar" class="w-64 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white flex-shrink-0 flex flex-col shadow-2xl border-r border-slate-700">
     <div class="p-4 border-b border-slate-700 flex-shrink-0">
      <div class="flex items-center gap-3 mb-1">
-      <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg"><i data-lucide="file-text" class="w-5 h-5 text-white"></i>
+      <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+       <i data-lucide="file-text" class="w-5 h-5 text-white"></i>
       </div>
       <div class="min-w-0">
        <h1 class="text-base font-bold leading-tight truncate">eWorkPermit</h1>
@@ -169,88 +171,112 @@ button:active::before { width: 200px; height: 200px; }
      © 2569 eWorkPermit System
     </div>
    </aside><!-- Mobile toggle --> <button id="mobileToggle" onclick="toggleSidebar()" class="fixed top-4 left-4 z-40 lg:hidden md:hidden bg-gradient-to-br from-blue-500 to-blue-600 text-white p-2.5 rounded-lg shadow-lg hover:shadow-xl transition btn-shadow"> <i data-lucide="menu" class="w-5 h-5"></i> </button> <!-- Main Content -->
-   <main class="flex-1 overflow-y-auto h-full w-full lg:w-auto lg:flex-1 transition-all duration-300" style="-webkit-overflow-scrolling: touch;"><!-- PAGE: ENTRY -->
+   <main class="flex-1 overflow-y-auto h-full w-full lg:w-auto lg:flex-1 transition-all duration-300" style="-webkit-overflow-scrolling: touch;">
+    <!-- PAGE: ENTRY -->
     <div id="page-entry" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full" style="min-height: 100%; background: linear-gradient(135deg, rgba(15,23,42,0.5) 0%, rgba(30,41,59,0.5) 100%);">
      <div class="mb-5">
       <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white flex items-center gap-2"><i data-lucide="file-plus" class="w-5 h-5 md:w-6 md:h-6 text-blue-400"></i> <span id="mainTitle">บันทึกข้อมูลทะเบียนคุมการจ่ายคืนค่าธรรมเนียม</span></h2>
       <p class="text-xs sm:text-sm text-slate-300 mt-1" id="subTitle">ระบบทะเบียนคุมการจ่ายคืนค่าธรรมเนียมใบอนุญาตทำงาน และเงินหลักประกันการอนุญาตทำงานของคนต่างด้าวรายตัว</p>
      </div>
-     <form id="entryForm" onsubmit="return false;"><!-- ส่วนข้อมูลทั่วไป -->
+     <form id="entryForm" onsubmit="return false;">
+      <!-- ส่วนข้อมูลทั่วไป -->
       <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
        <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="clipboard-list" class="w-5 h-5 text-indigo-500"></i> ข้อมูลทั่วไป</h3>
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">ลำดับที่</label> <input type="text" id="f_seq" readonly value="(ระบบบันทึกอัตโนมัติ)" class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500 cursor-not-allowed input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">ลำดับที่</label> <input type="text" id="f_seq" readonly value="(ระบบบันทึกอัตโนมัติ)" class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500 cursor-not-allowed input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">เลขรับที่ <span class="text-red-400">*</span></label> <input type="text" id="f_recvNo" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">เลขรับที่ <span class="text-red-400">*</span></label> <input type="text" id="f_recvNo" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">เลขรับหนังสือ สบต.</label> <input type="text" id="f_sbtNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">เลขรับหนังสือ สบต.</label> <input type="text" id="f_sbtNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">วันที่รับหนังสือ (สบต.)</label> <input type="date" id="f_sbtDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">วันที่รับหนังสือ (สบต.)</label> <input type="date" id="f_sbtDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
        </div>
       </div><!-- ผู้ชำระเงิน -->
       <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4">
        <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"><i data-lucide="user" class="w-5 h-5 text-indigo-500"></i> ผู้ชำระเงิน (นายจ้าง/บนจ.)</h3>
        <div class="grid grid-cols-1 gap-4">
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">ชื่อผู้ชำระเงิน (นายจ้าง/บนจ.)</label> <input type="text" id="f_payer" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">ชื่อผู้ชำระเงิน (นายจ้าง/บนจ.)</label> <input type="text" id="f_payer" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
        </div>
       </div><!-- ค่าธรรมเนียมใบอนุญาตทำงาน -->
       <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
        <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="receipt" class="w-5 h-5 text-green-500"></i> ข้อมูลค่าธรรมเนียมใบอนุญาตทำงาน</h3>
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">เลขที่ใบเสร็จรับเงิน</label> <input type="text" id="f_feeReceiptNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">เลขที่ใบเสร็จรับเงิน</label> <input type="text" id="f_feeReceiptNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">วันที่ใบเสร็จรับเงิน</label> <input type="date" id="f_feeReceiptDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">วันที่ใบเสร็จรับเงิน</label> <input type="date" id="f_feeReceiptDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">ชื่อเจ้าหน้าที่รับเงิน</label> <input type="text" id="f_feeOfficer" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">ชื่อเจ้าหน้าที่รับเงิน</label> <input type="text" id="f_feeOfficer" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">จำนวนเงิน (บาท)</label> <input type="text" id="f_feeAmount" oninput="formatMoney(this)" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="0">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">จำนวนเงิน (บาท)</label> <input type="text" id="f_feeAmount" oninput="formatMoney(this)" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="0">
         </div>
        </div>
       </div><!-- ข้อมูลแรงงานต่างด้าว -->
       <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
        <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="users" class="w-5 h-5 text-orange-500"></i> ข้อมูลแรงงานต่างด้าว</h3>
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">เลขประจำตัวแรงงาน / เลขอ้างอิง</label> <input type="text" id="f_workerId" maxlength="19" oninput="formatWorkerId(this)" placeholder="RA+ตัวเลข17หลัก" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus font-mono tracking-wide">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">เลขประจำตัวแรงงาน / เลขอ้างอิง</label> <input type="text" id="f_workerId" maxlength="19" oninput="formatWorkerId(this)" placeholder="RA+ตัวเลข17หลัก" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus font-mono tracking-wide">
          <p class="text-[10px] text-slate-400 mt-0.5">รูปแบบ: RA แล้วตามด้วยตัวเลข 17 หลัก</p>
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">ชื่อแรงงานต่างด้าว</label> <input type="text" id="f_workerName" oninput="this.value=this.value.toUpperCase()" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus uppercase" placeholder="ENGLISH NAME ONLY">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">ชื่อแรงงานต่างด้าว</label> <input type="text" id="f_workerName" oninput="this.value=this.value.toUpperCase()" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus uppercase" placeholder="ENGLISH NAME ONLY">
          <p class="text-[10px] text-slate-400 mt-0.5">ภาษาอังกฤษพิมพ์ใหญ่เท่านั้น</p>
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">สัญชาติ</label> <select id="f_nationality" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกสัญชาติ --</option> <option>เมียนมา</option><option>ลาว</option><option>กัมพูชา</option><option>เวียดนาม</option><option>อื่นๆ</option> </select>
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">สัญชาติ</label> <select id="f_nationality" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกสัญชาติ --</option> <option>เมียนมา</option><option>ลาว</option><option>กัมพูชา</option><option>เวียดนาม</option><option>อื่นๆ</option> </select>
         </div>
        </div>
       </div><!-- ค่าหลักประกัน -->
       <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
        <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="shield" class="w-5 h-5 text-purple-500"></i> ข้อมูลค่าหลักประกัน</h3>
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">เลขที่ใบเสร็จรับเงิน</label> <input type="text" id="f_gReceiptNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">เลขที่ใบเสร็จรับเงิน</label> <input type="text" id="f_gReceiptNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">วันที่ใบเสร็จรับเงิน</label> <input type="date" id="f_gReceiptDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">วันที่ใบเสร็จรับเงิน</label> <input type="date" id="f_gReceiptDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">ชื่อเจ้าหน้าที่รับเงิน</label> <input type="text" id="f_gOfficer" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">ชื่อเจ้าหน้าที่รับเงิน</label> <input type="text" id="f_gOfficer" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">จำนวนเงิน (บาท)</label> <input type="text" id="f_gAmount" oninput="formatMoney(this)" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="0">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">จำนวนเงิน (บาท)</label> <input type="text" id="f_gAmount" oninput="formatMoney(this)" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="0">
         </div>
        </div>
       </div><!-- การอนุมัติและสถานะ -->
       <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-4 card-hover">
        <h3 class="text-sm sm:text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 section-title"><i data-lucide="check-circle" class="w-5 h-5 text-teal-500"></i> การอนุมัติและสถานะ</h3>
        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">วันที่ขออนุมัติ (วันที่ทางคลังอนุมัติให้จ่ายเงิน)</label> <input type="date" id="f_approveDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">วันที่ขออนุมัติ (วันที่ทางคลังอนุมัติให้จ่ายเงิน)</label> <input type="date" id="f_approveDate" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus">
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">เจ้าหน้าที่ผู้รับผิดชอบ</label> <select id="f_responsible" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกเจ้าหน้าที่ --</option> </select>
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">เจ้าหน้าที่ผู้รับผิดชอบ</label> <select id="f_responsible" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกเจ้าหน้าที่ --</option> </select>
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">สถานะการดำเนินการ</label> <select id="f_status" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกสถานะ --</option> </select>
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">สถานะการดำเนินการ</label> <select id="f_status" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกสถานะ --</option> </select>
         </div>
-        <div><label class="block text-xs font-medium text-slate-600 mb-1">วันเวลาที่แจ้งสถานะล่าสุด</label> <input type="text" id="f_statusDate" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500 cursor-not-allowed input-focus">
+        <div>
+         <label class="block text-xs font-medium text-slate-600 mb-1">วันเวลาที่แจ้งสถานะล่าสุด</label> <input type="text" id="f_statusDate" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-sm text-slate-500 cursor-not-allowed input-focus">
         </div>
-        <div class="sm:col-span-2"><label class="block text-xs font-medium text-slate-600 mb-1">หมายเหตุ</label> <textarea id="f_remark" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus resize-none"></textarea>
+        <div class="sm:col-span-2">
+         <label class="block text-xs font-medium text-slate-600 mb-1">หมายเหตุ</label> <textarea id="f_remark" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus resize-none"></textarea>
         </div>
        </div>
       </div><!-- Buttons -->
-      <div class="flex flex-wrap gap-2 sm:gap-3 justify-end mb-8"><button type="button" onclick="clearForm()" class="px-4 sm:px-5 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-sm font-medium hover:bg-slate-300 transition flex items-center gap-2"> <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span>ล้าง</span> </button> <button type="button" id="btnSave" onclick="saveData()" class="px-5 sm:px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"> <i data-lucide="save" class="w-4 h-4"></i> <span>บันทึก</span> </button>
+      <div class="flex flex-wrap gap-2 sm:gap-3 justify-end mb-8">
+       <button type="button" onclick="clearForm()" class="px-4 sm:px-5 py-2.5 bg-slate-200 text-slate-700 rounded-xl text-sm font-medium hover:bg-slate-300 transition flex items-center gap-2"> <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span>ล้าง</span> </button> <button type="button" id="btnSave" onclick="saveData()" class="px-5 sm:px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"> <i data-lucide="save" class="w-4 h-4"></i> <span>บันทึก</span> </button>
       </div>
      </form>
     </div><!-- PAGE: SEARCH -->
@@ -260,11 +286,14 @@ button:active::before { width: 200px; height: 200px; }
      </div>
      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4 card-hover">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-       <div><label class="block text-xs font-medium text-slate-600 mb-1">ค้นหาจากเลขรับที่</label> <input type="text" id="s_recvNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="พิมพ์เลขรับที่...">
+       <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">ค้นหาจากเลขรับที่</label> <input type="text" id="s_recvNo" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="พิมพ์เลขรับที่...">
        </div>
-       <div><label class="block text-xs font-medium text-slate-600 mb-1">ค้นหาจากเลขประจำตัวแรงงาน</label> <input type="text" id="s_workerId" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="RA...">
+       <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">ค้นหาจากเลขประจำตัวแรงงาน</label> <input type="text" id="s_workerId" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="RA...">
        </div>
-       <div class="flex items-end gap-2"><button onclick="searchData()" id="btnSearch" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"> <i data-lucide="search" class="w-4 h-4"></i> ค้นหา </button> <button onclick="clearSearch()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-sm hover:bg-slate-300 transition">ล้าง</button>
+       <div class="flex items-end gap-2">
+        <button onclick="searchData()" id="btnSearch" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"> <i data-lucide="search" class="w-4 h-4"></i> ค้นหา </button> <button onclick="clearSearch()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl text-sm hover:bg-slate-300 transition">ล้าง</button>
        </div>
       </div>
      </div><!-- Search results -->
@@ -275,13 +304,15 @@ button:active::before { width: 200px; height: 200px; }
        </div><!-- Bulk status update (only for receipt search) -->
        <div id="bulkStatusSection" class="hidden mb-4 pb-4 border-b border-slate-200">
         <div class="flex flex-wrap gap-2 items-end">
-         <div class="flex-1 min-w-[200px]"><label class="block text-xs font-medium text-slate-600 mb-1">เปลี่ยนสถานะทั้งหมด</label> <select id="bulkStatus" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกสถานะใหม่ --</option> </select>
+         <div class="flex-1 min-w-[200px]">
+          <label class="block text-xs font-medium text-slate-600 mb-1">เปลี่ยนสถานะทั้งหมด</label> <select id="bulkStatus" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus bg-white"> <option value="">-- เลือกสถานะใหม่ --</option> </select>
          </div><button onclick="bulkUpdateStatus()" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-sm font-semibold hover:bg-amber-700 transition flex items-center gap-2 shadow-md"> <i data-lucide="layers" class="w-4 h-4"></i> อัปเดต </button>
         </div>
        </div>
        <div id="emptyState" class="hidden text-center py-12">
         <div class="flex justify-center mb-4">
-         <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center"><i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i>
+         <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
+          <i data-lucide="inbox" class="w-8 h-8 text-slate-400"></i>
          </div>
         </div>
         <p class="text-slate-500 font-medium mb-1">ไม่พบข้อมูล</p>
@@ -319,8 +350,7 @@ button:active::before { width: 200px; height: 200px; }
       </div>
       <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl px-4 py-3 text-center shadow-sm">
        <p class="text-xs font-semibold text-slate-600 mb-2 uppercase tracking-wider">อัปเดตถัดไปใน</p>
-       <div class="flex items-center justify-center gap-1">
-        <span class="text-2xl font-bold text-blue-600 tabular-nums" id="reportCountdown">60</span> <span class="text-xs text-slate-500 font-medium">วินาที</span>
+       <div class="flex items-center justify-center gap-1"><span class="text-2xl font-bold text-blue-600 tabular-nums" id="reportCountdown">60</span> <span class="text-xs text-slate-500 font-medium">วินาที</span>
        </div>
        <div class="mt-2 w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
         <div id="countdownBar" class="bg-gradient-to-r from-blue-400 to-blue-600 h-full w-full transition-all" style="width: 100%;"></div>
@@ -328,7 +358,8 @@ button:active::before { width: 200px; height: 200px; }
       </div>
      </div>
      <div id="reportContent">
-      <div class="flex items-center justify-center py-16 text-slate-400"><button onclick="loadReport()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"> <i data-lucide="refresh-cw" class="w-5 h-5"></i> โหลดรายงาน </button>
+      <div class="flex items-center justify-center py-16 text-slate-400">
+       <button onclick="loadReport()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"> <i data-lucide="refresh-cw" class="w-5 h-5"></i> โหลดรายงาน </button>
       </div>
      </div>
     </div><!-- PAGE: DATABASE -->
@@ -337,16 +368,11 @@ button:active::before { width: 200px; height: 200px; }
       <h2 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2"><i data-lucide="user-plus" class="w-5 h-5 md:w-6 md:h-6 text-blue-400"></i> เพิ่มเจ้าหน้าที่ผู้รับผิดชอบ</h2>
       <p class="text-sm text-slate-300 mt-1">บันทึกชื่อเจ้าหน้าที่ผู้รับผิดชอบใหม่</p>
      </div>
-     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
       <form onsubmit="return false;">
-       <div class="mb-4">
-        <label class="block text-sm font-medium text-slate-700 mb-2">ชื่อเจ้าหน้าที่ <span class="text-red-500">*</span></label> <input type="text" id="addOfficerName" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="ชื่อ-นามสกุล">
+       <div class="mb-4"><label class="block text-sm font-medium text-slate-700 mb-2">ชื่อเจ้าหน้าที่ <span class="text-red-500">*</span></label> <input type="text" id="addOfficerName" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="ชื่อ-นามสกุล">
        </div><button type="button" onclick="saveNewOfficer()" class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:shadow-lg transition flex items-center justify-center gap-2 shadow-md btn-shadow"> <i data-lucide="plus" class="w-5 h-5"></i> บันทึกเจ้าหน้าที่ </button>
       </form>
-     </div>
-     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-      <h3 class="text-base font-semibold text-slate-800 mb-4">รายชื่อเจ้าหน้าที่ที่บันทึก</h3>
-      <div id="officerListAddPage" class="space-y-2 max-h-96 overflow-y-auto"></div>
      </div>
     </div><!-- PAGE: ADD STATUS -->
     <div id="page-addStatus" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full hidden" style="min-height: 100%; background: linear-gradient(135deg, rgba(15,23,42,0.5) 0%, rgba(30,41,59,0.5) 100%);">
@@ -354,16 +380,11 @@ button:active::before { width: 200px; height: 200px; }
       <h2 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2"><i data-lucide="list-plus" class="w-5 h-5 md:w-6 md:h-6 text-blue-400"></i> เพิ่มสถานะการดำเนินการ</h2>
       <p class="text-sm text-slate-300 mt-1">บันทึกสถานะการดำเนินการใหม่</p>
      </div>
-     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
       <form onsubmit="return false;">
-       <div class="mb-4">
-        <label class="block text-sm font-medium text-slate-700 mb-2">สถานะการดำเนินการ <span class="text-red-500">*</span></label> <input type="text" id="addStatusName" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="ชื่อสถานะ">
+       <div class="mb-4"><label class="block text-sm font-medium text-slate-700 mb-2">สถานะการดำเนินการ <span class="text-red-500">*</span></label> <input type="text" id="addStatusName" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition input-focus" placeholder="ชื่อสถานะ">
        </div><button type="button" onclick="saveNewStatus()" class="w-full px-6 py-3 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-xl font-semibold hover:shadow-lg transition flex items-center justify-center gap-2 shadow-md btn-shadow"> <i data-lucide="plus" class="w-5 h-5"></i> บันทึกสถานะ </button>
       </form>
-     </div>
-     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-      <h3 class="text-base font-semibold text-slate-800 mb-4">รายชื่อสถานะที่บันทึก</h3>
-      <div id="statusListAddPage" class="space-y-2 max-h-96 overflow-y-auto"></div>
      </div>
     </div><!-- PAGE: DATABASE -->
     <div id="page-database" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full hidden" style="min-height: 100%; background: linear-gradient(135deg, rgba(15,23,42,0.5) 0%, rgba(30,41,59,0.5) 100%);">
@@ -373,7 +394,8 @@ button:active::before { width: 200px; height: 200px; }
      </div>
      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 card-hover text-center">
       <div class="flex justify-center mb-4">
-       <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center shadow-lg"><i data-lucide="database" class="w-8 h-8 text-white"></i>
+       <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+        <i data-lucide="database" class="w-8 h-8 text-white"></i>
        </div>
       </div>
       <h3 class="text-lg font-bold text-slate-800 mb-2">ฐานข้อมูลส่วนกลาง</h3>
@@ -395,7 +417,8 @@ button:active::before { width: 200px; height: 200px; }
    <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 modal-content max-h-[90%] overflow-y-auto">
     <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="pencil" class="w-5 h-5 text-blue-600"></i> แก้ไขข้อมูล</h3>
     <div id="editFormContent"></div>
-    <div class="flex gap-3 mt-5"><button onclick="closeEditModal()" class="flex-1 py-2.5 bg-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-300 transition">ยกเลิก</button> <button onclick="saveEdit()" id="btnSaveEdit" class="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">บันทึกการแก้ไข</button>
+    <div class="flex gap-3 mt-5">
+     <button onclick="closeEditModal()" class="flex-1 py-2.5 bg-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-300 transition">ยกเลิก</button> <button onclick="saveEdit()" id="btnSaveEdit" class="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">บันทึกการแก้ไข</button>
     </div>
    </div>
   </div>
@@ -577,56 +600,7 @@ function renderStatusSelect() {
 }
 
 function renderSettingsLists() {
-  const oList = document.getElementById('officerList');
-  if (oList) {
-    oList.innerHTML = officers.map((o, i) => `
-      <div class="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg">
-        <span class="text-sm text-slate-700">${o}</span>
-        <button onclick="removeOfficer(${i})" class="text-red-400 hover:text-red-600 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-      </div>
-    `).join('');
-  }
-
-  const sList = document.getElementById('statusList');
-  if (sList) {
-    sList.innerHTML = statuses.map((s, i) => `
-      <div class="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg">
-        <span class="text-sm text-slate-700">${s}</span>
-        <button onclick="removeStatus(${i})" class="text-red-400 hover:text-red-600 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-      </div>
-    `).join('');
-  }
-
-  // Update add page lists
-  const oListAddPage = document.getElementById('officerListAddPage');
-  if (oListAddPage) {
-    oListAddPage.innerHTML = officers.length === 0 
-      ? '<p class="text-center py-8 text-slate-400 text-sm">ยังไม่มีข้อมูล</p>'
-      : officers.map((o, i) => `
-        <div class="flex items-center justify-between px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition">
-          <div class="flex-1">
-            <p class="text-sm font-medium text-slate-800">${o}</p>
-          </div>
-          <button onclick="removeOfficer(${i})" class="ml-3 text-red-400 hover:text-red-600 transition p-1"><i data-lucide="x-circle" class="w-4 h-4"></i></button>
-        </div>
-      `).join('');
-  }
-
-  const sListAddPage = document.getElementById('statusListAddPage');
-  if (sListAddPage) {
-    sListAddPage.innerHTML = statuses.length === 0
-      ? '<p class="text-center py-8 text-slate-400 text-sm">ยังไม่มีข้อมูล</p>'
-      : statuses.map((s, i) => `
-        <div class="flex items-center justify-between px-4 py-3 bg-teal-50 border border-teal-200 rounded-lg hover:bg-teal-100 transition">
-          <div class="flex-1">
-            <p class="text-sm font-medium text-slate-800">${s}</p>
-          </div>
-          <button onclick="removeStatus(${i})" class="ml-3 text-red-400 hover:text-red-600 transition p-1"><i data-lucide="x-circle" class="w-4 h-4"></i></button>
-        </div>
-      `).join('');
-  }
-
-  lucide.createIcons();
+  // Removed: rendering of officer/status lists
 }
 
 function addOfficer() {
@@ -958,42 +932,26 @@ function renderSearchResults(data) {
   if (emptyState) emptyState.classList.add('hidden');
   if (tableContainer) tableContainer.classList.remove('hidden');
   
-  tbody.innerHTML = data.map((r, i) => {
+  // Build HTML in one pass instead of joining
+  let html = '';
+  const statusMap = {
+    'อยู่ระหว่างตรวจสอบข้อมูล': { bg: 'bg-blue-100', text: 'text-blue-700', icon: 'eye' },
+    'อยู่ระหว่างประสานงานผู้แจ้ง': { bg: 'bg-amber-100', text: 'text-amber-700', icon: 'phone' },
+    'อยู่ระหว่างเสนอหนังสือพิจารณา/อนุมัติ': { bg: 'bg-purple-100', text: 'text-purple-700', icon: 'file-check' },
+    'อยู่ระหว่างพิจารณาจ่ายเงิน': { bg: 'bg-pink-100', text: 'text-pink-700', icon: 'hourglass' },
+    'ดำเนินการเสร็จสิ้น': { bg: 'bg-green-100', text: 'text-green-700', icon: 'check-circle' }
+  };
+
+  for (let i = 0; i < data.length; i++) {
+    const r = data[i];
     const fee = r.feeAmount ? Number(r.feeAmount).toLocaleString('th-TH', {minimumFractionDigits: 0}) : '-';
     const gAmt = r.gAmount ? Number(r.gAmount).toLocaleString('th-TH', {minimumFractionDigits: 0}) : '-';
-    
-    const statusMap = {
-      'อยู่ระหว่างตรวจสอบข้อมูล': { bg: 'bg-blue-100', text: 'text-blue-700', icon: 'eye' },
-      'อยู่ระหว่างประสานงานผู้แจ้ง': { bg: 'bg-amber-100', text: 'text-amber-700', icon: 'phone' },
-      'อยู่ระหว่างเสนอหนังสือพิจารณา/อนุมัติ': { bg: 'bg-purple-100', text: 'text-purple-700', icon: 'file-check' },
-      'อยู่ระหว่างพิจารณาจ่ายเงิน': { bg: 'bg-pink-100', text: 'text-pink-700', icon: 'hourglass' },
-      'ดำเนินการเสร็จสิ้น': { bg: 'bg-green-100', text: 'text-green-700', icon: 'check-circle' }
-    };
-    
     const statusStyle = statusMap[r.status] || { bg: 'bg-slate-100', text: 'text-slate-700', icon: 'help-circle' };
     
-    return `<tr class="border-b border-slate-100 hover:bg-blue-50/50 transition">
-      <td class="px-4 py-3 text-slate-600 font-medium">${r.seq || i+1}</td>
-      <td class="px-4 py-3 font-semibold text-slate-800">${r.recvNo || '-'}</td>
-      <td class="px-4 py-3 text-slate-700">${r.payer || '-'}</td>
-      <td class="px-4 py-3 font-mono text-[10px] bg-slate-50 rounded px-2 py-1 text-slate-600">${r.workerId || '-'}</td>
-      <td class="px-4 py-3 text-slate-700 font-medium">${r.workerName || '-'}</td>
-      <td class="px-4 py-3 text-slate-600">${r.nationality || '-'}</td>
-      <td class="px-4 py-3 text-right text-green-700 font-semibold">${fee}</td>
-      <td class="px-4 py-3 text-right text-purple-700 font-semibold">${gAmt}</td>
-      <td class="px-4 py-3">
-        <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}">
-          <i data-lucide="${statusStyle.icon}" class="w-3 h-3"></i> ${r.status || '-'}
-        </span>
-      </td>
-      <td class="px-4 py-3 text-center text-xs text-slate-500">${r.statusDate || '-'}</td>
-      <td class="px-4 py-3 text-center">
-        <button onclick="openEdit(${i})" class="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-xs font-semibold hover:shadow-md transition">
-          <i data-lucide="pencil" class="w-3.5 h-3.5"></i> แก้ไข
-        </button>
-      </td>
-    </tr>`;
-  }).join('');
+    html += `<tr class="border-b border-slate-100 hover:bg-blue-50/50 transition"><td class="px-4 py-3 text-slate-600 font-medium">${r.seq || i+1}</td><td class="px-4 py-3 font-semibold text-slate-800">${r.recvNo || '-'}</td><td class="px-4 py-3 text-slate-700">${r.payer || '-'}</td><td class="px-4 py-3 font-mono text-[10px] bg-slate-50 rounded px-2 py-1 text-slate-600">${r.workerId || '-'}</td><td class="px-4 py-3 text-slate-700 font-medium">${r.workerName || '-'}</td><td class="px-4 py-3 text-slate-600">${r.nationality || '-'}</td><td class="px-4 py-3 text-right text-green-700 font-semibold">${fee}</td><td class="px-4 py-3 text-right text-purple-700 font-semibold">${gAmt}</td><td class="px-4 py-3"><span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}"><i data-lucide="${statusStyle.icon}" class="w-3 h-3"></i> ${r.status || '-'}</span></td><td class="px-4 py-3 text-center text-xs text-slate-500">${r.statusDate || '-'}</td><td class="px-4 py-3 text-center"><button onclick="openEdit(${i})" class="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-xs font-semibold hover:shadow-md transition"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> แก้ไข</button></td></tr>`;
+  }
+  
+  tbody.innerHTML = html;
   
   const lastUpdateEl = document.getElementById('lastUpdateTime');
   if (lastUpdateEl) lastUpdateEl.textContent = new Date().toLocaleTimeString('th-TH');
@@ -1151,12 +1109,23 @@ let reportRefreshInterval = null;
 let reportCountdownInterval = null;
 const REPORT_REFRESH_INTERVAL = 60000; // 60 seconds
 
-// Database loading
+// Database loading with caching
+let cachedSheetData = null;
+let lastSheetLoadTime = 0;
+const SHEET_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+
 async function loadGoogleSheetData() {
-  // Check if data already loaded
+  // Check if data already loaded and cached
   const tbody = document.getElementById('dbTableBody');
   if (tbody && tbody.innerHTML.trim() !== '') {
     return; // Already loaded, skip
+  }
+
+  // Use cached data if available and fresh
+  const now = Date.now();
+  if (cachedSheetData && (now - lastSheetLoadTime) < SHEET_CACHE_DURATION) {
+    renderDatabaseTable(cachedSheetData);
+    return;
   }
 
   showLoading('กำลังโหลดข้อมูล', 'กรุณารอสักครู่...');
@@ -1164,7 +1133,10 @@ async function loadGoogleSheetData() {
   try {
     const csvUrl = `https://docs.google.com/spreadsheets/d/${currentSheetUrl}/export?format=csv`;
     
-    const response = await fetch(csvUrl);
+    const response = await fetch(csvUrl, { 
+      signal: AbortSignal.timeout(15000), // 15 second timeout
+      cache: 'force-cache'
+    });
     if (!response.ok) {
       throw new Error('ไม่สามารถเข้าถึงฐานข้อมูลได้ (HTTP ' + response.status + ')');
     }
@@ -1188,6 +1160,10 @@ async function loadGoogleSheetData() {
       });
       data.push(row);
     }
+
+    // Cache the data
+    cachedSheetData = data;
+    lastSheetLoadTime = now;
 
     closeModal();
     
@@ -1579,6 +1555,9 @@ window.elementSdk.init({
   ])
 });
 
+// Cache for debounce/throttle
+let resizeTimer = null;
+
 // Responsive sidebar
 function handleResize() {
   const sb = document.getElementById('sidebar');
@@ -1589,14 +1568,31 @@ function handleResize() {
     sb.classList.remove('fixed', 'top-0', 'left-0', '-translate-x-full', 'transition-transform', 'duration-300');
   }
 }
-window.addEventListener('resize', handleResize);
-window.addEventListener('orientationchange', () => {
-  setTimeout(handleResize, 100);
-});
+
+// Throttled resize handler
+function throttledResize() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(handleResize, 150);
+}
+
+window.addEventListener('resize', throttledResize);
+window.addEventListener('orientationchange', throttledResize);
 handleResize();
 
-init();
-lucide.createIcons();
+// Lazy-load Lucide icons after initial render
+function deferredInit() {
+  init();
+  // Load icons in batches for better performance
+  requestAnimationFrame(() => lucide.createIcons());
+}
+
+// Start initialization immediately if DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', deferredInit);
+} else {
+  deferredInit();
+}
+
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e80ac9ca546f82a',t:'MTc3NTQ3NzI2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e80bb5b24d0f82a',t:'MTc3NTQ3Nzg3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
