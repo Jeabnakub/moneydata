@@ -368,34 +368,31 @@ button:active::before { width: 200px; height: 200px; }
       <h2 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 md:w-6 md:h-6 text-blue-400"></i> ตั้งค่าระบบ</h2>
      </div><!-- Officers -->
      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4">
-      <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"><i data-lucide="user-plus" class="w-5 h-5 text-indigo-500"></i> จัดการเจ้าหน้าที่ผู้รับผิดชอบ</h3>
-      <div class="flex gap-2 mb-3">
-       <input type="text" id="newOfficer" placeholder="ชื่อ-นามสกุลเจ้าหน้าที่" class="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 outline-none transition"> <button onclick="addOfficer()" class="px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition flex items-center gap-1"> <i data-lucide="plus" class="w-4 h-4"></i> เพิ่ม </button>
+      <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"><i data-lucide="user-plus" class="w-5 h-5 text-indigo-500"></i> เจ้าหน้าที่ผู้รับผิดชอบ</h3>
+      <div id="officerList" class="space-y-2 mb-4"></div>
+      <div class="flex gap-2"><input type="text" id="newOfficer" class="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 outline-none transition input-focus" placeholder="ชื่อเจ้าหน้าที่ใหม่..."> <button onclick="addOfficer()" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่ม</button>
       </div>
-      <div id="officerList" class="space-y-1"></div>
      </div><!-- Statuses -->
      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4">
-      <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"><i data-lucide="list-checks" class="w-5 h-5 text-teal-500"></i> จัดการสถานะการดำเนินการ</h3>
-      <div class="flex gap-2 mb-3">
-       <input type="text" id="newStatus" placeholder="ชื่อสถานะ" class="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 outline-none transition input-focus"> <button onclick="addStatus()" class="px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition flex items-center gap-1"> <i data-lucide="plus" class="w-4 h-4"></i> เพิ่ม </button>
+      <h3 class="text-base font-semibold text-slate-700 flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"><i data-lucide="list-checks" class="w-5 h-5 text-teal-500"></i> สถานะการดำเนินการ</h3>
+      <div id="statusList" class="space-y-2 mb-4"></div>
+      <div class="flex gap-2"><input type="text" id="newStatus" class="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-400 outline-none transition input-focus" placeholder="สถานะใหม่..."> <button onclick="addStatus()" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md btn-shadow"><i data-lucide="plus" class="w-4 h-4"></i> เพิ่ม</button>
       </div>
-      <div id="statusList" class="space-y-1"></div>
      </div>
     </div><!-- PAGE: DATABASE -->
     <div id="page-database" class="page fade-in p-3 sm:p-4 md:p-6 lg:p-8 w-full hidden" style="min-height: 100%; background: linear-gradient(135deg, rgba(15,23,42,0.5) 0%, rgba(30,41,59,0.5) 100%);">
      <div class="mb-5">
       <h2 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2"><i data-lucide="database" class="w-5 h-5 md:w-6 md:h-6 text-blue-400"></i> ฐานข้อมูล Google Sheet</h2>
-      <p class="text-sm text-slate-300 mt-1">เลือกฐานข้อมูล Google Sheet เพื่อนำเข้าข้อมูล</p>
+      <p class="text-sm text-slate-300 mt-1">ข้อมูลทั้งหมดจากระบบ</p>
      </div>
-     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 card-hover">
-      <div class="flex flex-col items-center justify-center text-center">
-       <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mb-6">
-        <i data-lucide="sheet" class="w-10 h-10 text-blue-600"></i>
+     <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 card-hover text-center">
+      <div class="flex justify-center mb-4">
+       <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+        <i data-lucide="database" class="w-8 h-8 text-white"></i>
        </div>
-       <h3 class="text-2xl font-bold text-slate-800 mb-2">Google Sheet ฐานข้อมูล</h3>
-       <p class="text-slate-600 mb-8 max-w-md">คลิกปุ่มด้านล่างเพื่อเปิดฐานข้อมูล Google Sheet ในแท็บใหม่ และดูข้อมูลทั้งหมด</p><button onclick="openGoogleSheet()" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:from-green-700 hover:to-emerald-700 transition btn-shadow text-lg"> <i data-lucide="external-link" class="w-6 h-6"></i> เปิด Google Sheet </button>
-       <p class="text-xs text-slate-400 mt-6">จะเปิดในแท็บใหม่ โปรดตรวจสอบว่าแล้วจึงกลับมา</p>
       </div>
+      <h3 class="text-lg font-bold text-slate-800 mb-2">ฐานข้อมูลส่วนกลาง</h3>
+      <p class="text-sm text-slate-600 mb-4">ข้อมูลทั้งหมดจากระบบได้บันทึกไว้ใน Google Sheet</p><button onclick="openGoogleSheet()" class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl text-sm font-semibold hover:shadow-lg transition flex items-center gap-2 mx-auto shadow-md btn-shadow"> <i data-lucide="external-link" class="w-4 h-4"></i> เปิด Google Sheet </button>
      </div>
     </div>
    </main>
@@ -461,11 +458,10 @@ function init() {
   ensureDefaultData();
   loadSettingsFromStorage();
   renderSettingsLists();
-  updateStatusDateTime();
-  loadSheetUrlFromStorage();
-  // Populate dropdowns immediately - must be done AFTER loadSettingsFromStorage
   renderOfficerSelect();
   renderStatusSelect();
+  updateStatusDateTime();
+  loadSheetUrlFromStorage();
 }
 
 function loadSettingsFromStorage() {
@@ -1556,5 +1552,5 @@ handleResize();
 init();
 lucide.createIcons();
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e807c00d7933e68',t:'MTc3NTQ3NTI3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e808eaf97053e68',t:'MTc3NTQ3NjA0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
