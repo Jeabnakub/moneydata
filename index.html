@@ -3,46 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkPermit Intelligence Dashboard</title>
+    <title>WorkPermit Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Kanit', sans-serif; background: #0f172a; }
+        body { font-family: 'Kanit', sans-serif; background: #0f172a; color: white; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
-<body class="p-8 text-slate-100">
+<body class="p-8">
 
     <div class="max-w-7xl mx-auto">
-        <header class="flex justify-between items-center mb-10">
-            <div>
-                <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">WorkPermit Command Center</h1>
-                <p class="text-slate-400">ระบบติดตามสถานะแรงงานแบบเรียลไทม์</p>
-            </div>
-            <div id="toast" class="hidden bg-emerald-600 px-4 py-2 rounded-lg text-sm animate-bounce">อัปเดตข้อมูลล่าสุดแล้ว!</div>
+        <header class="mb-10">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">WorkPermit Command Center</h1>
+            <p class="text-slate-400">ระบบติดตามและวิเคราะห์ข้อมูลสถานะแรงงานแบบเรียลไทม์</p>
         </header>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <div class="glass-card p-6 rounded-2xl">
-                <p class="text-slate-400 text-sm mb-2">อัตราความสำเร็จ</p>
-                <div class="flex items-end gap-3">
-                    <h2 class="text-4xl font-bold" id="stat-rate">88%</h2>
-                    <span class="text-emerald-400 text-sm pb-1">▲ 2.4%</span>
-                </div>
+                <h2 class="text-lg mb-4 text-slate-300">สัดส่วนสถานะการดำเนินการ</h2>
+                <canvas id="statusDoughnut" height="200"></canvas>
             </div>
             <div class="glass-card p-6 rounded-2xl">
-                <p class="text-slate-400 text-sm mb-2">รายการที่รอการตรวจสอบ</p>
-                <h2 class="text-4xl font-bold" id="stat-pending">142</h2>
-            </div>
-            <div class="glass-card p-6 rounded-2xl border border-rose-500/30">
-                <p class="text-rose-400 text-sm mb-2">ข้อผิดพลาดที่ต้องแก้ไข</p>
-                <h2 class="text-4xl font-bold text-rose-400" id="stat-error">12</h2>
+                <h2 class="text-lg mb-4 text-slate-300">แนวโน้มปริมาณงานแยกตามกลุ่ม</h2>
+                <canvas id="statusBar" height="200"></canvas>
             </div>
         </div>
 
         <!-- Data Table -->
         <div class="glass-card rounded-2xl p-6">
+            <h2 class="text-lg mb-4 text-slate-300">รายละเอียดรายการล่าสุด</h2>
             <table class="w-full text-left">
                 <thead>
                     <tr class="text-slate-400 text-sm border-b border-slate-700">
@@ -57,58 +49,44 @@
     </div>
 
     <script>
-        // ฟังก์ชันจำลองการอัปเดตตัวเลขแบบแอนิเมชัน
-        function animateValue(id, start, end, duration) {
-            let range = end - start;
-            let current = start;
-            let step = Math.abs(Math.floor(duration / range));
-            let timer = setInterval(() => {
-                current += 1;
-                document.getElementById(id).textContent = current;
-                if (current >= end) clearInterval(timer);
-            }, step);
-        }
+        // ข้อมูลตัวอย่างสำหรับทดสอบกราฟ
+        const chartData = {
+            labels: ['สำเร็จ', 'รอดำเนินการ', 'ต้องแก้ไข'],
+            datasets: [{
+                data: [65, 25, 10],
+                backgroundColor: ['#10b981', '#f59e0b', '#f43f5e']
+            }]
+        };
+
+        const ctxDoughnut = document.getElementById('statusDoughnut').getContext('2d');
+        new Chart(ctxDoughnut, { type: 'doughnut', data: chartData });
+
+        const ctxBar = document.getElementById('statusBar').getContext('2d');
+        new Chart(ctxBar, { 
+            type: 'bar', 
+            data: { labels: ['งานบริษัท', 'งานรายบุคคล'], datasets: [{ label: 'งานคงค้าง', data: [40, 20], backgroundColor: '#3b82f6' }] } 
+        });
 
         async function updateSystem() {
-            // แทนที่ URL นี้ด้วย URL ที่ได้จาก Google Apps Script
-            const API_URL = 'https://script.google.com/macros/s/AKfycbzq5q_ZaYRB5vrmElMLCM-uiXEVaxADMBgrxflhI2BSxJ7eTexMWIjNimIvQf9Cn4Lv/exec';
-            
+            // URL ที่อัปเดตแล้ว
+            const API_URL = 'https://script.google.com/macros/s/AKfycbyA73Q9VrGoijvp5Eszh35GME3YUJ4rleVKipxcNHneRg_vJHkdaKMTHEj-Ao1RAKsj/exec';
             try {
-                // ดึงข้อมูลจาก API
                 const response = await fetch(API_URL);
                 const data = await response.json();
-
-                // แสดง Toast แจ้งเตือน
-                const toast = document.getElementById('toast');
-                toast.classList.remove('hidden');
-                setTimeout(() => toast.classList.add('hidden'), 3000);
-
-                // Render ตารางข้อมูล
+                
                 const tbody = document.getElementById('table-body');
                 tbody.innerHTML = data.map(d => `
                     <tr class="border-b border-slate-800 hover:bg-white/5 transition">
-                        <td class="py-4">${d.employer || 'ไม่ระบุ'}</td>
-                        <td class="py-4">${d.worker || 'ไม่ระบุ'}</td>
-                        <td class="py-4">
-                            <span class="px-2 py-1 rounded ${d.status === 'สำเร็จ' ? 'bg-emerald-900 text-emerald-300' : 'bg-amber-900 text-amber-300'}">
-                                ${d.status || 'รอดำเนินการ'}
-                            </span>
-                        </td>
+                        <td class="py-4">${d.employer || '-'}</td>
+                        <td class="py-4">${d.worker || '-'}</td>
+                        <td class="py-4"><span class="px-2 py-1 rounded ${d.status === 'สำเร็จ' ? 'bg-emerald-900 text-emerald-300' : 'bg-amber-900 text-amber-300'}">${d.status || 'รอดำเนินการ'}</span></td>
                     </tr>
                 `).join('');
-                
-                // อัปเดตตัวเลขสถิติ (ตัวอย่าง: สมมติว่าได้ data.length)
-                animateValue('stat-pending', 100, data.length || 142, 1000);
-
-            } catch (error) {
-                console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
-            }
+            } catch (error) { console.error("Error fetching data:", error); }
         }
 
-        // ตั้งเวลาให้ระบบอัปเดตเองทุก 60 วินาที
+        // อัปเดตข้อมูลทุก 60 วินาที
         setInterval(updateSystem, 60000);
-        
-        // เรียกใช้งานครั้งแรกทันทีเมื่อโหลดหน้าเว็บ
         updateSystem();
     </script>
 </body>
