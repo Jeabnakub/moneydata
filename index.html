@@ -3,91 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkPermit Command Center</title>
+    <title>WorkPermit Summary Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Kanit', sans-serif; background: #0f172a; color: white; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .card { background: white; border: 1px solid #e2e8f0; }
     </style>
 </head>
-<body class="p-8">
+<body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <header class="mb-10">
-            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">WorkPermit Command Center</h1>
-            <p class="text-slate-400">ระบบติดตามและวิเคราะห์ข้อมูลสถานะแรงงานแบบเรียลไทม์</p>
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800">สรุปรายงานสถานะใบอนุญาต</h1>
+            <p class="text-slate-500">รายงานข้อมูลสถานะแรงงานแบบเรียลไทม์</p>
         </header>
 
-        <!-- Charts Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div class="glass-card p-6 rounded-2xl">
-                <h2 class="text-lg mb-4 text-slate-300">สัดส่วนสถานะการดำเนินการ</h2>
-                <canvas id="statusDoughnut" height="200"></canvas>
+        <!-- Stats Grid (Compact) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="card p-4 rounded-xl shadow-sm text-center">
+                <p class="text-xs uppercase text-slate-400 font-medium">ทั้งหมด</p>
+                <h3 class="text-2xl font-bold text-slate-800" id="total-count">0</h3>
             </div>
-            <div class="glass-card p-6 rounded-2xl">
-                <h2 class="text-lg mb-4 text-slate-300">แนวโน้มปริมาณงานแยกตามกลุ่ม</h2>
-                <canvas id="statusBar" height="200"></canvas>
+            <div class="card p-4 rounded-xl shadow-sm text-center border-l-4 border-emerald-500">
+                <p class="text-xs uppercase text-emerald-600 font-medium">สำเร็จ</p>
+                <h3 class="text-2xl font-bold text-emerald-600" id="success-count">0</h3>
+            </div>
+            <div class="card p-4 rounded-xl shadow-sm text-center border-l-4 border-amber-500">
+                <p class="text-xs uppercase text-amber-600 font-medium">รอดำเนินการ</p>
+                <h3 class="text-2xl font-bold text-amber-600" id="pending-count">0</h3>
+            </div>
+            <div class="card p-4 rounded-xl shadow-sm text-center border-l-4 border-rose-500">
+                <p class="text-xs uppercase text-rose-600 font-medium">ต้องแก้ไข</p>
+                <h3 class="text-2xl font-bold text-rose-600" id="error-count">0</h3>
             </div>
         </div>
 
-        <!-- Data Table -->
-        <div class="glass-card rounded-2xl p-6">
-            <h2 class="text-lg mb-4 text-slate-300">รายละเอียดรายการล่าสุด</h2>
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="text-slate-400 text-sm border-b border-slate-700">
-                        <th class="pb-4">นายจ้าง</th>
-                        <th class="pb-4">แรงงาน</th>
-                        <th class="pb-4">สถานะ</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body" class="text-sm"></tbody>
-            </table>
+        <!-- Main Content: Charts & Detailed Table -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <!-- Left: Charts -->
+            <div class="xl:col-span-1 space-y-8">
+                <div class="card p-6 rounded-2xl shadow-sm">
+                    <h2 class="font-semibold mb-4">สัดส่วนสถานะงาน</h2>
+                    <canvas id="mainChart" height="250"></canvas>
+                </div>
+            </div>
+
+            <!-- Right: Detailed Table -->
+            <div class="xl:col-span-2 card rounded-2xl shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100 font-semibold">รายละเอียดรายการล่าสุด</div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-slate-50 text-slate-500 uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">นายจ้าง</th>
+                                <th class="px-6 py-4">แรงงาน</th>
+                                <th class="px-6 py-4">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // ข้อมูลตัวอย่างสำหรับทดสอบกราฟ
-        const chartData = {
-            labels: ['สำเร็จ', 'รอดำเนินการ', 'ต้องแก้ไข'],
-            datasets: [{
-                data: [65, 25, 10],
-                backgroundColor: ['#10b981', '#f59e0b', '#f43f5e']
-            }]
-        };
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyA73Q9VrGoijvp5Eszh35GME3YUJ4rleVKipxcNHneRg_vJHkdaKMTHEj-Ao1RAKsj/exec';
 
-        const ctxDoughnut = document.getElementById('statusDoughnut').getContext('2d');
-        new Chart(ctxDoughnut, { type: 'doughnut', data: chartData });
-
-        const ctxBar = document.getElementById('statusBar').getContext('2d');
-        new Chart(ctxBar, { 
-            type: 'bar', 
-            data: { labels: ['งานบริษัท', 'งานรายบุคคล'], datasets: [{ label: 'งานคงค้าง', data: [40, 20], backgroundColor: '#3b82f6' }] } 
-        });
-
-        async function updateSystem() {
-            // URL ที่อัปเดตแล้ว
-            const API_URL = 'https://script.google.com/macros/s/AKfycbyA73Q9VrGoijvp5Eszh35GME3YUJ4rleVKipxcNHneRg_vJHkdaKMTHEj-Ao1RAKsj/exec';
+        async function updateDashboard() {
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
-                
+
+                // อัปเดตตาราง
                 const tbody = document.getElementById('table-body');
                 tbody.innerHTML = data.map(d => `
-                    <tr class="border-b border-slate-800 hover:bg-white/5 transition">
-                        <td class="py-4">${d.employer || '-'}</td>
-                        <td class="py-4">${d.worker || '-'}</td>
-                        <td class="py-4"><span class="px-2 py-1 rounded ${d.status === 'สำเร็จ' ? 'bg-emerald-900 text-emerald-300' : 'bg-amber-900 text-amber-300'}">${d.status || 'รอดำเนินการ'}</span></td>
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-6 py-4 font-medium text-slate-700">${d.employer || '-'}</td>
+                        <td class="px-6 py-4 text-slate-600">${d.worker || '-'}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-[10px] font-bold ${d.status === 'สำเร็จ' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+                                ${d.status || 'รอดำเนินการ'}
+                            </span>
+                        </td>
                     </tr>
                 `).join('');
-            } catch (error) { console.error("Error fetching data:", error); }
+
+                // อัปเดตสถิติสมมติ
+                document.getElementById('total-count').innerText = data.length;
+                document.getElementById('success-count').innerText = data.filter(d => d.status === 'สำเร็จ').length;
+                document.getElementById('pending-count').innerText = data.filter(d => d.status === 'รอดำเนินการ').length;
+                document.getElementById('error-count').innerText = data.filter(d => d.status === 'ต้องแก้ไข').length;
+
+            } catch (e) { console.error("Error:", e); }
         }
 
-        // อัปเดตข้อมูลทุก 60 วินาที
-        setInterval(updateSystem, 60000);
-        updateSystem();
+        // Initialize Chart
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        new Chart(ctx, { type: 'doughnut', data: { labels: ['สำเร็จ', 'รอดำเนินการ', 'ต้องแก้ไข'], datasets: [{ data: [10, 5, 2], backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'] }] } });
+
+        setInterval(updateDashboard, 60000);
+        updateDashboard();
     </script>
 </body>
 </html>
