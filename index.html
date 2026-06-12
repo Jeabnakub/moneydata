@@ -215,34 +215,39 @@
     </main>
   </div>
 
-  <div id="duplicate-warning-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-    <div class="relative w-full max-w-md transform overflow-hidden rounded-[24px] bg-white p-6 text-left align-middle shadow-2xl transition-all border border-amber-200 scale-95 duration-300" id="modal-content">
+  <div id="duplicate-warning-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="relative w-full max-w-md transform overflow-hidden rounded-[24px] bg-white p-6 text-left align-middle shadow-2xl transition-all border-2 border-orange-500 scale-95 duration-300" id="modal-content">
       
-      <div class="flex flex-col items-center text-center gap-4 mt-2">
-        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 border border-amber-200 text-amber-500 shadow-sm shadow-amber-100">
-          <i data-lucide="amber-alert" class="hidden"></i> <i data-lucide="alert-triangle" style="width: 28px; height: 28px;"></i>
+      <div class="flex flex-col items-center text-center gap-3 mt-1">
+        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 border border-orange-200 text-orange-600 shadow-sm shadow-orange-100 animate-pulse">
+          <i data-lucide="alert-triangle" style="width: 32px; height: 32px;"></i>
         </div>
         <div>
-          <h3 class="text-lg font-bold text-slate-900 leading-6">ตรวจสอบการยื่นคำขอซ้ำซ้อน</h3>
-          <p class="mt-2 text-sm text-slate-500 font-normal leading-relaxed px-2">
-            โปรดตรวจสอบให้แน่ใจว่าแรงงานรายนี้ <span class="text-amber-600 font-semibold underline">ยังไม่เคยถูกส่งข้อมูล</span> เข้ามาในระบบ เพื่อป้องกันความล่าช้าในการตรวจสอบข้อมูลของเจ้าหน้าที่
+          <h3 class="text-lg font-extrabold text-slate-900 leading-6 tracking-tight">สำคัญมาก: ห้ามยื่นข้อมูลซ้ำซ้อน!</h3>
+          <p class="mt-2 text-sm text-slate-600 font-medium leading-relaxed px-1">
+            หากระบบตรวจพบว่าคุณยื่นข้อมูลแรงงานคนเดิมซ้ำมากกว่า 1 ครั้ง <br>
+            <span class="text-red-600 font-extrabold underline decoration-2">คำขอทั้งหมดของแรงงานรายนั้นจะถูกระงับการตรวจสอบทันที</span>
           </p>
         </div>
       </div>
 
-      <div class="mt-4 bg-slate-50 border border-slate-200/60 rounded-xl p-3.5 text-xs text-slate-600 space-y-2">
-        <div class="flex gap-2 items-start">
-          <i data-lucide="search" class="text-sky-600 shrink-0 mt-0.5" style="width: 14px; height: 14px;"></i>
-          <span>หากไม่แน่ใจ แนะนำให้ใช้บริการ <strong class="text-slate-800">"STEP 02 ตรวจสอบสถานะ"</strong> ก่อนยื่นเรื่องใหม่</span>
+      <div class="mt-5 space-y-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs sm:text-sm">
+        <div class="flex gap-2.5 items-start text-red-600 font-bold">
+          <i data-lucide="x-circle" class="shrink-0 mt-0.5" style="width: 16px; height: 16px;"></i>
+          <span>ห้ามกดส่งข้อมูลใหม่ หากเคยแจ้งชื่อเข้าระบบไว้แล้ว</span>
+        </div>
+        <div class="flex gap-2.5 items-start text-emerald-700 font-medium">
+          <i data-lucide="check-circle-2" class="shrink-0 mt-0.5" style="width: 16px; height: 16px;"></i>
+          <span>หากไม่มั่นใจ ให้ไปที่ <strong class="underline font-bold text-slate-900">STEP 02 เพื่อเช็กสถานะ</strong> ก่อนเสมอ</span>
         </div>
       </div>
 
       <div class="mt-6 flex flex-col sm:flex-row-reverse gap-3">
-        <button id="btn-modal-confirm" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-amber-500 hover:bg-amber-600 text-white px-4 py-3 text-xs font-bold shadow-md shadow-amber-100 transition-colors cursor-pointer">
-          ยืนยันและดำเนินการต่อ
+        <button id="btn-modal-confirm" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-3.5 text-xs font-bold shadow-lg shadow-orange-100 transition-colors cursor-pointer">
+          เข้าใจแล้ว ดำเนินการต่อ
         </button>
-        <button id="btn-modal-cancel" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 text-xs font-bold border border-slate-200 transition-colors cursor-pointer">
-          ยกเลิกเพื่อตรวจสอบก่อน
+        <button id="btn-modal-cancel" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3.5 text-xs font-bold border border-slate-200 transition-colors cursor-pointer">
+          ยกเลิก เพื่อไปเช็กสถานะก่อน
         </button>
       </div>
 
@@ -274,7 +279,6 @@
       
       const targetUrl = "https://108links.com/ework";
 
-      // ฟังก์ชันเปิด Popup แบบนุ่มนวล
       function openModal() {
         modal.classList.remove('hidden');
         setTimeout(() => {
@@ -284,27 +288,23 @@
         }, 10);
       }
 
-      // ฟังก์ชันปิด Popup แบบนุ่มนวล
       function closeModal() {
         modal.classList.add('opacity-0');
         modalContent.classList.remove('scale-100');
         modalContent.classList.add('scale-95');
         setTimeout(() => {
           modal.classList.add('hidden');
-        }, 300); // รอให้ transition ทำงานเสร็จสิ้น
+        }, 300);
       }
 
-      // กดปุ่มเริ่มแจ้งข้อมูล -> เปิด Popup เตือนก่อน
       if (btnOpenSubmit) {
         btnOpenSubmit.addEventListener('click', openModal);
       }
 
-      // กดปุ่มยกเลิกใน Popup -> ปิดหน้าต่างลง
       if (btnModalCancel) {
         btnModalCancel.addEventListener('click', closeModal);
       }
 
-      // กดปุ่มยืนยันใน Popup -> เปิดลิงก์ระบบกรอกฟอร์มจริง (ขึ้นหน้าต่างใหม่) และปิด Popup
       if (btnModalConfirm) {
         btnModalConfirm.addEventListener('click', function() {
           window.open(targetUrl, '_blank', 'noopener,noreferrer');
@@ -312,7 +312,6 @@
         });
       }
 
-      // คลิกพื้นที่ด้านนอกกล่องสีขาว (Backdrop) เพื่อปิด Popup ได้เช่นกัน
       modal.addEventListener('click', function(e) {
         if (e.target === modal) {
           closeModal();
