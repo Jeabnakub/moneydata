@@ -215,40 +215,40 @@
     </main>
   </div>
 
-  <div id="duplicate-warning-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-    <div class="relative w-full max-w-md transform overflow-hidden rounded-[28px] bg-white text-left align-middle shadow-2xl transition-all border-t-[8px] border-red-600 scale-95 duration-300" id="modal-content">
+  <div id="duplicate-warning-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="relative w-full max-w-md transform overflow-hidden rounded-[28px] bg-white text-left align-middle shadow-2xl transition-all border-t-[8px] border-amber-500 scale-95 duration-300" id="modal-content">
       
       <div class="p-6 pb-0 flex flex-col items-center text-center gap-3">
-        <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 border-2 border-red-200 text-red-600 shadow-inner animate-bounce">
-          <i data-lucide="alert-octagon" style="width: 36px; height: 36px;"></i>
+        <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 border-2 border-amber-200 text-amber-500 shadow-inner">
+          <i data-lucide="alert-triangle" style="width: 36px; height: 36px;"></i>
         </div>
         
         <div>
-          <span class="inline-block bg-red-100 text-red-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-2">ประกาศเตือนความปลอดภัย</span>
-          <h3 class="text-xl font-extrabold text-slate-900 leading-tight tracking-tight">ตรวจพบความซ้ำซ้อนจะถูกระงับทันที!</h3>
+          <span class="inline-block bg-amber-100 text-amber-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-1">ข้อแนะนำการยื่นคำขอ</span>
+          <h3 class="text-xl font-extrabold text-slate-900 leading-tight tracking-tight">ตรวจสอบข้อมูลเพื่อป้องกันการยื่นซ้ำ</h3>
         </div>
       </div>
 
       <div class="px-6 py-4 space-y-3">
-        <div class="bg-red-50/70 border border-red-200 rounded-2xl p-4 text-xs sm:text-sm space-y-3">
-          <p class="text-slate-700 font-medium leading-relaxed text-center border-b border-red-200/60 pb-2.5">
-            ห้ามกดยื่นเรื่องส่งเดชเด็ดขาด ระบบจะทำการ <span class="text-red-600 font-extrabold underline decoration-2 decoration-red-600">ยกเลิกและแบนคำขอทั้งหมด</span> ของบุคคลนั้นหากมีการส่งข้อมูลซ้ำซ้อนเข้ามาในฐานข้อมูล
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs sm:text-sm space-y-2.5">
+          <p class="text-slate-600 font-medium leading-relaxed text-center border-b border-slate-200 pb-2">
+            กรุณาตรวจสอบให้แน่ใจว่า รายชื่อแรงงานต่างด้าวรายดังกล่าว <span class="text-amber-600 font-bold underline">ยังไม่เคยมีการส่งเรื่องเข้ามาในระบบ</span> เพื่อความเป็นระเบียบเรียบร้อยของฐานข้อมูล
           </p>
           
           <div class="space-y-2">
-            <div class="flex gap-2.5 items-start text-red-600 font-extrabold">
-              <i data-lucide="shield-alert" class="shrink-0 mt-0.5" style="width: 16px; height: 16px;"></i>
-              <span>ห้ามยื่นซ้ำเด็ดขาด หากเคยส่งรายชื่อไปแล้วแม้แต่ครั้งเดียว</span>
+            <div class="flex gap-2.5 items-start text-slate-700 font-medium">
+              <i data-lucide="info" class="shrink-0 mt-0.5 text-amber-500" style="width: 16px; height: 16px;"></i>
+              <span>โปรดหลีกเลี่ยงการส่งคำขอซ้ำ สำหรับแรงงานคนเดิมที่เคยยื่นไปแล้ว</span>
             </div>
-            <div class="flex gap-2.5 items-start text-slate-800 font-semibold">
-              <i data-lucide="help-circle" class="shrink-0 mt-0.5 text-sky-600" style="width: 16px; height: 16px;"></i>
-              <span>ไม่แน่ใจ? ให้กดยกเลิกแล้วไปเช็กที่ "STEP 02 ตรวจสถานะ" ก่อน</span>
+            <div class="flex gap-2.5 items-start text-slate-600 font-normal">
+              <i data-lucide="search" class="shrink-0 mt-0.5 text-sky-600" style="width: 16px; height: 16px;"></i>
+              <span>หากไม่มั่นใจ สามารถตรวจสอบรายชื่อได้ที่เมนู "STEP 02 ตรวจสอบสถานะ"</span>
             </div>
           </div>
         </div>
 
-        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs sm:text-sm flex gap-3 items-start">
-          <i data-lucide="clock" class="text-amber-600 shrink-0 mt-0.5 animate-spin" style="animation-duration: 4s; width: 18px; height: 18px;"></i>
+        <div class="bg-amber-50/70 border border-amber-100 rounded-2xl p-4 text-xs sm:text-sm flex gap-3 items-start">
+          <i data-lucide="clock" class="text-amber-600 shrink-0 mt-0.5" style="width: 18px; height: 18px;"></i>
           <div class="text-amber-800 font-medium leading-relaxed">
             <strong class="font-bold text-amber-950 block mb-0.5">หมายเหตุเกี่ยวกับการดำเนินการ:</strong>
             การนำเข้าข้อมูลสู่ระบบของเจ้าหน้าที่ (OS) อาจมีความล่าช้าในบางช่วงเวลา ทางเจ้าหน้าที่ต้องขออภัยในความไม่สะดวกมา ณ ที่นี้
@@ -257,11 +257,11 @@
       </div>
 
       <div class="bg-slate-50 p-6 pt-4 rounded-b-[28px] flex flex-col sm:flex-row-reverse gap-3 border-t border-slate-100">
-        <button id="btn-modal-cancel" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-slate-900 hover:bg-slate-800 text-white px-4 py-3.5 text-xs font-bold shadow-md transition-colors cursor-pointer">
-          <i data-lucide="search" class="mr-1.5" style="width: 14px; height: 14px;"></i> กลับไปตรวจสอบสถานะก่อน
+        <button id="btn-modal-confirm" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-amber-500 hover:bg-amber-600 text-white px-4 py-3.5 text-xs font-bold shadow-md transition-colors cursor-pointer">
+          ตรวจสอบแล้ว ดำเนินการต่อ
         </button>
-        <button id="btn-modal-confirm" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-red-100 hover:bg-red-200 text-red-700 px-4 py-3.5 text-xs font-bold border border-red-300 transition-colors cursor-pointer">
-          มั่นใจแล้วว่าไม่ซ้ำ ดำเนินการต่อ
+        <button id="btn-modal-cancel" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 px-4 py-3.5 text-xs font-bold border border-slate-200 transition-colors cursor-pointer">
+          ยกเลิก เพื่อไปเช็กสถานะก่อน
         </button>
       </div>
 
