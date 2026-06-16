@@ -6,7 +6,8 @@
   <title>ระบบจัดการและแจ้งกรณีไม่พบข้อมูลในระบบ EWORKPERMIT</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Athiti:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- เปลี่ยนมาโหลดเฉพาะฟอนต์ Sarabun เพื่อความเป็นทางการของราชการ -->
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { 
       font-family: 'Sarabun', sans-serif; 
@@ -14,12 +15,13 @@
       line-height: 1.8; 
       color: #334155; 
     }
+    
+    /* บังคับให้หัวข้อทั้งหมดใช้ฟอนต์ Sarabun เพื่อความสม่ำเสมอ */
     h1, h2, h3, h4, h5, h6 { 
-      font-family: 'Athiti', sans-serif; 
+      font-family: 'Sarabun', sans-serif; 
       color: #0f172a; 
-      letter-spacing: -0.02em; 
+      letter-spacing: -0.01em; 
     }
-    .athiti-font { font-family: 'Athiti', sans-serif; }
     
     /* เอฟเฟกต์ Glassmorphism และ Hover */
     .glass-card {
@@ -56,7 +58,8 @@
          <div class="flex gap-3.5 rounded-2xl border border-red-100 bg-red-50/50 p-5">
            <i data-lucide="alert-circle" class="text-red-500 shrink-0 mt-1"></i>
            <p class="text-slate-700 text-base">
-             <strong class="text-red-600 athiti-font font-bold">คำเตือน :</strong> เว็บไซต์นี้ สำนักบริหารแรงงานต่างด้าว กรมการจัดหางาน ได้จัดทำขึ้นเพื่อตรวจสอบและนำเข้าข้อมูลแรงงานต่างด้าว&nbsp;4&nbsp;สัญชาติ กรณีที่ <span class="font-bold text-slate-900 border-b-2 border-red-200">ไม่พบข้อมูลในระบบ eworkpermit.doe.go.th</span>
+             <!-- นำคลาส athiti-font ออก เพื่อให้ใช้ฟอนต์ Sarabun ตาม body -->
+             <strong class="text-red-600 font-bold">คำเตือน :</strong> เว็บไซต์นี้ สำนักบริหารแรงงานต่างด้าว กรมการจัดหางาน ได้จัดทำขึ้นเพื่อตรวจสอบและนำเข้าข้อมูลแรงงานต่างด้าว&nbsp;4&nbsp;สัญชาติ กรณีที่ <span class="font-bold text-slate-900 border-b-2 border-red-200">ไม่พบข้อมูลในระบบ eworkpermit.doe.go.th</span>
            </p>
          </div>
        </header>
