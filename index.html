@@ -6,7 +6,7 @@
   <title>ระบบแจ้งกรณีไม่พบข้อมูลในระบบ EWORKPERMIT</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #0f172a;
@@ -20,9 +20,9 @@
 
     body {
       margin: 0;
-      font-family: 'IBM Plex Sans Thai', 'Anuphan', sans-serif;
+      /* ฟอนต์หลักสำหรับเนื้อหาให้อ่านง่ายสบายตา */
+      font-family: 'Prompt', sans-serif; 
       color: var(--ink);
-      /* พื้นหลังไล่สีนุ่มนวล */
       background-color: #f8fafc;
       background-image: 
         radial-gradient(at 100% 0%, hsla(200, 100%, 94%, 1) 0px, transparent 50%),
@@ -32,6 +32,11 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
+    /* ฟอนต์สำหรับหัวข้อและปุ่มให้ดูโดดเด่น น่าสนใจ */
+    h1, h2, h3, h4, h5, h6, button, .btn-gradient-primary, .btn-gradient-secondary, .kanit-font {
+      font-family: 'Kanit', sans-serif;
+    }
+
     .app-shell {
       width: 100%;
       min-height: 100vh;
@@ -39,7 +44,6 @@
       overflow-x: hidden;
     }
 
-    /* วงกลมแสงด้านหลังให้ดูละมุนขึ้น */
     .vibrant-blur {
       position: absolute;
       border-radius: 50%;
@@ -51,7 +55,6 @@
     .orb-1 { width: 500px; height: 500px; background: #bae6fd; top: -100px; right: -100px; }
     .orb-2 { width: 400px; height: 400px; background: #a7f3d0; left: -100px; bottom: 50px; }
 
-    /* กล่องหลักแบบ Glassmorphism พรีเมียม */
     .vibrant-panel {
       background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(24px);
@@ -60,7 +63,6 @@
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 1);
     }
 
-    /* การ์ดเมนู */
     .vibrant-card {
       position: relative;
       background: #ffffff;
@@ -69,7 +71,6 @@
       overflow: hidden;
     }
     
-    /* เส้นสีขอบบนของการ์ด */
     .vibrant-card::before {
       content: '';
       position: absolute;
@@ -88,7 +89,6 @@
     }
     .vibrant-card:hover::before { opacity: 1; }
 
-    /* ปุ่มกดไล่สี */
     .btn-gradient-primary {
       background: var(--primary-gradient);
       transition: all 0.3s ease;
@@ -107,7 +107,6 @@
       transform: translateY(-1px);
     }
 
-    /* อนิเมชันเปิดหน้าเว็บ */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -128,7 +127,7 @@
        <header class="mb-8 sm:mb-10">
         <div class="vibrant-panel rounded-[28px] p-6 sm:p-10">
          <div class="flex flex-col gap-6">
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 kanit-font">
            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 text-white shadow-lg shadow-sky-200/50">
             <i data-lucide="building-2" style="width: 22px; height: 22px;"></i>
            </div>
@@ -144,7 +143,7 @@
             <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
              <i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
             </div>
-            <p data-template-id="page-subtitle" class="text-sm sm:text-base font-medium leading-relaxed text-slate-700">
+            <p data-template-id="page-subtitle" class="text-sm sm:text-base font-medium leading-relaxed text-slate-700 kanit-font">
              <strong class="text-red-600">คำเตือน :</strong> เว็บไซต์นี้จัดทำขึ้นเพื่อตรวจสอบและนำเข้าข้อมูลแรงงานต่างด้าว 4 สัญชาติ <br class="hidden sm:block">เฉพาะกรณีที่ <span class="font-bold text-slate-900 border-b-2 border-red-300">ไม่พบข้อมูลในระบบ eworkpermit.doe.go.th</span> เท่านั้น
             </p>
            </div>
@@ -169,7 +168,7 @@
        <div class="space-y-8">
         <section data-template-id="primary-group" class="section-1">
          <div class="mb-6 flex flex-col gap-1.5 px-2">
-          <div class="flex items-center gap-2.5">
+          <div class="flex items-center gap-2.5 kanit-font">
            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-sky-100 text-sky-500">
             <i data-lucide="layers" style="width: 14px; height: 14px;"></i>
            </span>
@@ -182,7 +181,7 @@
           <article data-template-id="service-card-one" class="vibrant-card card-primary rounded-[24px] p-6 sm:p-8 shadow-sm">
            <div class="flex h-full flex-col justify-between gap-8">
             <div>
-             <div class="mb-6 flex items-center justify-between">
+             <div class="mb-6 flex items-center justify-between kanit-font">
               <div data-template-id="service-one-icon-bg" class="h-14 w-14 rounded-2xl flex items-center justify-center bg-sky-50 text-sky-600 border border-sky-100">
                <i data-lucide="user-plus" style="width: 28px; height: 28px;"></i>
               </div>
@@ -194,7 +193,7 @@
              </p>
             </div>
             <div class="pt-2">
-             <button id="btn-open-submit" class="btn-gradient-primary inline-flex w-full items-center justify-center gap-2 rounded-xl text-white px-5 py-4 text-sm font-bold shadow-md transition-all cursor-pointer"> 
+             <button id="btn-open-submit" class="btn-gradient-primary inline-flex w-full items-center justify-center gap-2 rounded-xl text-white px-5 py-4 text-sm font-bold shadow-md transition-all cursor-pointer kanit-font"> 
               <span>เริ่มแจ้งข้อมูลในระบบ</span> <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i> 
              </button>
             </div>
@@ -204,7 +203,7 @@
           <article data-template-id="service-card-two" class="vibrant-card card-secondary rounded-[24px] p-6 sm:p-8 shadow-sm">
            <div class="flex h-full flex-col justify-between gap-8">
             <div>
-             <div class="mb-6 flex items-center justify-between">
+             <div class="mb-6 flex items-center justify-between kanit-font">
               <div data-template-id="service-two-icon-bg" class="h-14 w-14 rounded-2xl flex items-center justify-center bg-emerald-50 text-emerald-600 border border-emerald-100">
                <i data-lucide="clipboard-check" style="width: 28px; height: 28px;"></i>
               </div>
@@ -216,7 +215,7 @@
              </p>
             </div>
             <div class="pt-2">
-             <a href="https://108links.com/STATUS-ALINE" target="_blank" rel="noopener noreferrer" data-template-id="service-two-button" class="btn-gradient-secondary inline-flex w-full items-center justify-center gap-2 rounded-xl text-white px-5 py-4 text-sm font-bold shadow-md transition-all"> 
+             <a href="https://108links.com/STATUS-ALINE" target="_blank" rel="noopener noreferrer" data-template-id="service-two-button" class="btn-gradient-secondary inline-flex w-full items-center justify-center gap-2 rounded-xl text-white px-5 py-4 text-sm font-bold shadow-md transition-all kanit-font" style="text-decoration: none;"> 
               <span>ตรวจสอบสถานะปัจจุบัน</span> <i data-lucide="external-link" style="width: 18px; height: 18px;"></i> 
              </a>
             </div>
@@ -245,22 +244,22 @@
           <i data-lucide="shield-alert" style="width: 32px; height: 32px; position: relative; z-index: 1;"></i>
         </div>
         
-        <div class="space-y-1">
+        <div class="space-y-1 kanit-font">
           <h3 class="text-xl font-bold text-slate-900">ตรวจสอบก่อนยื่นคำขอ</h3>
-          <p class="text-sm text-slate-500">เพื่อป้องกันการบันทึกข้อมูลซ้ำซ้อนในระบบ</p>
+          <p class="text-sm text-slate-500 kanit-font font-normal">เพื่อป้องกันการบันทึกข้อมูลซ้ำซ้อนในระบบ</p>
         </div>
       </div>
 
       <div class="px-6 py-2 space-y-4">
         <div class="bg-slate-50 border border-slate-200/60 rounded-2xl p-4.5 text-sm space-y-3">
           <p class="text-slate-700 font-medium leading-relaxed">
-            กรุณาตรวจสอบให้แน่ใจว่า รายชื่อแรงงานต่างด้าวนี้ <span class="text-amber-600 font-bold bg-amber-50 px-1 rounded">ยังไม่เคยถูกส่งเรื่อง</span> เข้ามาในระบบ
+            กรุณาตรวจสอบให้แน่ใจว่า รายชื่อแรงงานต่างด้าวนี้ <span class="text-amber-600 font-bold bg-amber-50 px-1 rounded kanit-font">ยังไม่เคยถูกส่งเรื่อง</span> เข้ามาในระบบ
           </p>
           
           <ul class="space-y-2.5">
             <li class="flex gap-3 items-start text-slate-600">
               <i data-lucide="check-circle-2" class="shrink-0 mt-0.5 text-sky-500" style="width: 16px; height: 16px;"></i>
-              <span class="text-[13px] leading-relaxed">หากไม่มั่นใจ สามารถตรวจสอบรายชื่อได้ที่เมนู <strong>"STEP 02 ตรวจสอบสถานะ"</strong> ก่อนทำรายการ</span>
+              <span class="text-[13px] leading-relaxed">หากไม่มั่นใจ สามารถตรวจสอบรายชื่อได้ที่เมนู <strong class="kanit-font font-medium">"STEP 02 ตรวจสอบสถานะ"</strong> ก่อนทำรายการ</span>
             </li>
             <li class="flex gap-3 items-start text-slate-600">
               <i data-lucide="clock" class="shrink-0 mt-0.5 text-sky-500" style="width: 16px; height: 16px;"></i>
@@ -270,7 +269,7 @@
         </div>
       </div>
 
-      <div class="p-6 pt-4 flex flex-col sm:flex-row-reverse gap-3 mt-2">
+      <div class="p-6 pt-4 flex flex-col sm:flex-row-reverse gap-3 mt-2 kanit-font">
         <button id="btn-modal-confirm" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-amber-500 hover:bg-amber-600 text-white px-4 py-3.5 text-sm font-bold shadow-md shadow-amber-200 transition-colors cursor-pointer">
           ทราบแล้ว ดำเนินการต่อ
         </button>
@@ -295,9 +294,6 @@
         dateDisplay.textContent = today.toLocaleDateString('th-TH', options);
       }
 
-      // ==========================================
-      // LOGIC ควบคุม POPUP MODAL
-      // ==========================================
       const modal = document.getElementById('duplicate-warning-modal');
       const modalContent = document.getElementById('modal-content');
       const btnOpenSubmit = document.getElementById('btn-open-submit');
