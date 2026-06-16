@@ -6,12 +6,12 @@
   <title>ระบบแจ้งกรณีไม่พบข้อมูลในระบบ EWORKPERMIT</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&amp;family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #0f172a;
-      --primary-vibrant: #0284c7;
-      --secondary-vibrant: #10b981;
+      --primary-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      --secondary-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
     }
 
     * {
@@ -22,7 +22,11 @@
       margin: 0;
       font-family: 'IBM Plex Sans Thai', 'Anuphan', sans-serif;
       color: var(--ink);
-      background: radial-gradient(circle at 90% -10%, #e0f2fe 0%, #f8fafc 50%, #f0fdf4 100%);
+      /* พื้นหลังไล่สีนุ่มนวล */
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(at 100% 0%, hsla(200, 100%, 94%, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, hsla(150, 100%, 94%, 1) 0px, transparent 50%);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -32,70 +36,85 @@
       width: 100%;
       min-height: 100vh;
       position: relative;
+      overflow-x: hidden;
     }
 
+    /* วงกลมแสงด้านหลังให้ดูละมุนขึ้น */
     .vibrant-blur {
       position: absolute;
-      border-radius: 9999px;
-      filter: blur(110px);
-      opacity: 0.6;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.4;
       pointer-events: none;
-      z-index: 1;
+      z-index: 0;
     }
-    .orb-1 { width: 380px; height: 380px; background: #bae6fd; top: -20px; right: -20px; }
-    .orb-2 { width: 320px; height: 320px; background: #bbf7d0; left: -80px; bottom: 150px; }
+    .orb-1 { width: 500px; height: 500px; background: #bae6fd; top: -100px; right: -100px; }
+    .orb-2 { width: 400px; height: 400px; background: #a7f3d0; left: -100px; bottom: 50px; }
 
+    /* กล่องหลักแบบ Glassmorphism พรีเมียม */
     .vibrant-panel {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(226, 232, 240, 0.8);
-      box-shadow: 0 10px 30px -10px rgba(2, 132, 199, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 1);
     }
 
+    /* การ์ดเมนู */
     .vibrant-card {
       position: relative;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    .card-primary:hover {
-      transform: translateY(-4px);
-      border-color: #38bdf8;
-      box-shadow: 0 20px 40px -15px rgba(2, 132, 199, 0.15);
-    }
-
-    .card-secondary:hover {
-      transform: translateY(-4px);
-      border-color: #34d399;
-      box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.15);
-    }
-
-    .btn-vibrant {
-      position: relative;
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       overflow: hidden;
-      transition: all 0.2s ease;
     }
-    .btn-vibrant::after {
+    
+    /* เส้นสีขอบบนของการ์ด */
+    .vibrant-card::before {
       content: '';
       position: absolute;
-      top: 0; left: -100%; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: all 0.6s ease;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
     }
-    .btn-vibrant:hover::after {
-      left: 100%;
+    .card-primary::before { background: var(--primary-gradient); }
+    .card-secondary::before { background: var(--secondary-gradient); }
+
+    .vibrant-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.08);
+      border-color: rgba(203, 213, 225, 0.8);
+    }
+    .vibrant-card:hover::before { opacity: 1; }
+
+    /* ปุ่มกดไล่สี */
+    .btn-gradient-primary {
+      background: var(--primary-gradient);
+      transition: all 0.3s ease;
+    }
+    .btn-gradient-primary:hover {
+      box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
+      transform: translateY(-1px);
+    }
+    
+    .btn-gradient-secondary {
+      background: var(--secondary-gradient);
+      transition: all 0.3s ease;
+    }
+    .btn-gradient-secondary:hover {
+      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+      transform: translateY(-1px);
     }
 
+    /* อนิเมชันเปิดหน้าเว็บ */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    header { animation: fadeInUp 0.5s ease-out forwards; }
-    .section-1 { animation: fadeInUp 0.5s ease-out 0.1s forwards; opacity: 0; }
-    footer { animation: fadeInUp 0.5s ease-out 0.2s forwards; opacity: 0; }
+    header { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+    .section-1 { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards; opacity: 0; }
+    footer { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; opacity: 0; }
   </style>
  </head>
  <body>
@@ -107,40 +126,40 @@
       <div class="mx-auto max-w-5xl">
        
        <header class="mb-8 sm:mb-10">
-        <div class="vibrant-panel rounded-[24px] p-6 sm:p-10 border-t border-white shadow-xl">
-         <div class="flex flex-col gap-5">
+        <div class="vibrant-panel rounded-[28px] p-6 sm:p-10">
+         <div class="flex flex-col gap-6">
           <div class="flex items-center gap-3">
-           <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-600 text-white shadow-md shadow-sky-200">
-            <i data-lucide="building-2" style="width: 20px; height: 20px;"></i>
+           <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 text-white shadow-lg shadow-sky-200/50">
+            <i data-lucide="building-2" style="width: 22px; height: 22px;"></i>
            </div>
-           <span data-template-id="eyebrow" class="text-xs font-bold tracking-[0.12em] uppercase text-sky-700">สำนักบริหารแรงงานต่างด้าว กรมการจัดหางาน</span>
+           <span data-template-id="eyebrow" class="text-xs font-bold tracking-[0.1em] uppercase text-sky-600 bg-sky-50 px-3 py-1 rounded-full border border-sky-100">สำนักบริหารแรงงานต่างด้าว กรมการจัดหางาน</span>
           </div>
           
           <div class="max-w-4xl">
-           <h1 data-template-id="page-title" class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950 leading-snug">
+           <h1 data-template-id="page-title" class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
             ระบบจัดการและแจ้งกรณีไม่พบข้อมูลในระบบ EWORKPERMIT
            </h1>
            
-           <div class="mt-5 flex gap-3 rounded-2xl border border-red-200 bg-red-50/90 p-4 sm:p-5 shadow-sm">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+           <div class="mt-6 flex gap-3.5 rounded-2xl border border-red-100 bg-gradient-to-r from-red-50 to-white p-4 sm:p-5 shadow-sm">
+            <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
              <i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i>
             </div>
-            <p data-template-id="page-subtitle" class="text-sm sm:text-base font-bold leading-relaxed text-red-600">
-             คำเตือน : เว็บไซต์นี้ สำนักบริหารแรงงานต่างด้าว กรมการจัดหางาน ได้จัดทำขึ้นเพื่อตรวจสอบและนำเข้าข้อมูลแรงงานต่างด้าว 4 สัญชาติ กรณีที่ไม่พบข้อมูลในระบบ <span class="underline decoration-2 font-extrabold tracking-wide">eworkpermit.doe.go.th</span>
+            <p data-template-id="page-subtitle" class="text-sm sm:text-base font-medium leading-relaxed text-slate-700">
+             <strong class="text-red-600">คำเตือน :</strong> เว็บไซต์นี้จัดทำขึ้นเพื่อตรวจสอบและนำเข้าข้อมูลแรงงานต่างด้าว 4 สัญชาติ <br class="hidden sm:block">เฉพาะกรณีที่ <span class="font-bold text-slate-900 border-b-2 border-red-300">ไม่พบข้อมูลในระบบ eworkpermit.doe.go.th</span> เท่านั้น
             </p>
            </div>
           </div>
           
-          <div class="h-px bg-gradient-to-r from-sky-200 via-slate-200 to-transparent mt-2"></div>
+          <div class="h-px bg-gradient-to-r from-slate-200 via-slate-100 to-transparent mt-2"></div>
           
-          <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-medium text-slate-500">
-           <div class="flex items-center gap-2 bg-sky-50 text-sky-700 px-3 py-1.5 rounded-lg border border-sky-100">
-            <i data-lucide="calendar" class="text-sky-600" style="width: 14px; height: 14px;"></i> 
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-3 text-xs font-medium text-slate-500">
+           <div class="flex items-center gap-2 bg-white text-slate-600 px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm">
+            <i data-lucide="calendar" class="text-sky-500" style="width: 16px; height: 16px;"></i> 
             <span id="current-date-display">กำลังโหลดข้อมูลวันที่...</span>
            </div>
-           <div class="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-100">
-            <i data-lucide="mouse-pointer-click" class="text-emerald-600" style="width: 14px; height: 14px;"></i> 
-            <span data-template-id="meta-two">เลือกบริการด้านล่างเพื่อเริ่มขั้นตอน</span>
+           <div class="flex items-center gap-2 bg-white text-slate-600 px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm">
+            <i data-lucide="mouse-pointer-click" class="text-emerald-500" style="width: 16px; height: 16px;"></i> 
+            <span data-template-id="meta-two">กรุณาเลือกบริการด้านล่างเพื่อเริ่มขั้นตอน</span>
            </div>
           </div>
          </div>
@@ -148,55 +167,57 @@
        </header>
 
        <div class="space-y-8">
-        <section data-template-id="primary-group" class="section-1 rounded-[24px] border border-slate-200/60 bg-white/50 p-5 sm:p-8 shadow-sm">
-         <div class="mb-6 flex flex-col gap-1 px-1">
-          <div class="flex items-center gap-2">
-           <span class="h-3 w-3 rounded-full bg-sky-500 shadow-sm shadow-sky-300"></span>
-           <h2 data-template-id="primary-group-title" class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">บริการหลักสำหรับแจ้งข้อมูล</h2>
+        <section data-template-id="primary-group" class="section-1">
+         <div class="mb-6 flex flex-col gap-1.5 px-2">
+          <div class="flex items-center gap-2.5">
+           <span class="flex h-6 w-6 items-center justify-center rounded-full bg-sky-100 text-sky-500">
+            <i data-lucide="layers" style="width: 14px; height: 14px;"></i>
+           </span>
+           <h2 data-template-id="primary-group-title" class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">บริการหลักสำหรับแจ้งข้อมูล</h2>
           </div>
-          <p data-template-id="primary-group-desc" class="pl-5 text-xs sm:text-sm text-slate-500 font-normal">กรุณาเลือกทำรายการส่งข้อมูลใหม่ หรือตรวจสอบสถานะคำขอที่เคยแจ้งไว้</p>
+          <p data-template-id="primary-group-desc" class="pl-8 text-sm text-slate-500 font-medium">เลือกทำรายการส่งข้อมูลใหม่ หรือตรวจสอบสถานะคำขอที่เคยแจ้งไว้</p>
          </div>
          
          <div class="grid gap-6 md:grid-cols-2">
-          <article data-template-id="service-card-one" class="vibrant-card card-primary rounded-2xl p-5 sm:p-6 shadow-sm border-b-4 border-b-sky-500">
-           <div class="flex h-full flex-col justify-between gap-6">
+          <article data-template-id="service-card-one" class="vibrant-card card-primary rounded-[24px] p-6 sm:p-8 shadow-sm">
+           <div class="flex h-full flex-col justify-between gap-8">
             <div>
-             <div class="mb-5 flex items-start justify-between gap-4">
-              <div data-template-id="service-one-icon-bg" class="h-12 w-12 rounded-xl flex items-center justify-center bg-sky-50 border border-sky-100 text-sky-600 shadow-sm">
-               <i data-lucide="user-plus" style="width: 22px; height: 22px;"></i>
+             <div class="mb-6 flex items-center justify-between">
+              <div data-template-id="service-one-icon-bg" class="h-14 w-14 rounded-2xl flex items-center justify-center bg-sky-50 text-sky-600 border border-sky-100">
+               <i data-lucide="user-plus" style="width: 28px; height: 28px;"></i>
               </div>
-              <span data-template-id="service-one-number" class="rounded-full bg-sky-100 text-sky-700 px-3 py-1 text-[10px] font-bold tracking-wider">STEP 01</span>
+              <span data-template-id="service-one-number" class="rounded-full bg-sky-100 text-sky-700 px-3.5 py-1.5 text-[11px] font-bold tracking-wider">STEP 01</span>
              </div>
-             <h3 data-template-id="service-one-title" class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">เพิ่มรายชื่อกรณีไม่พบข้อมูล</h3>
-             <p data-template-id="service-one-desc" class="mt-3 text-xs sm:text-sm leading-relaxed text-slate-600 font-normal">
-              กรอกฟอร์มเพื่อส่งเรื่องแจ้งข้อมูลแรงงาน/บุคคลที่ไม่พบในระบบ เพื่อให้เจ้าหน้าที่ตรวจสอบความถูกต้องและประสาน OS นำเข้าข้อมูลเข้าสู่ระบบต่อไป
+             <h3 data-template-id="service-one-title" class="text-xl font-bold text-slate-900 tracking-tight">เพิ่มรายชื่อกรณีไม่พบข้อมูล</h3>
+             <p data-template-id="service-one-desc" class="mt-3.5 text-sm leading-relaxed text-slate-500">
+              กรอกฟอร์มเพื่อส่งเรื่องแจ้งข้อมูลแรงงานหรือบุคคลที่ไม่พบในระบบ เพื่อให้เจ้าหน้าที่ตรวจสอบความถูกต้องและประสาน OS นำเข้าข้อมูลเข้าสู่ระบบต่อไป
              </p>
             </div>
             <div class="pt-2">
-             <button id="btn-open-submit" class="btn-vibrant inline-flex w-full items-center justify-center gap-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white px-4 py-3.5 text-xs font-bold shadow-lg shadow-sky-100 transition-colors cursor-pointer"> 
-              <span>เริ่มแจ้งข้อมูลในระบบ</span> <i data-lucide="arrow-up-right" style="width: 15px; height: 15px;"></i> 
+             <button id="btn-open-submit" class="btn-gradient-primary inline-flex w-full items-center justify-center gap-2 rounded-xl text-white px-5 py-4 text-sm font-bold shadow-md transition-all cursor-pointer"> 
+              <span>เริ่มแจ้งข้อมูลในระบบ</span> <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i> 
              </button>
             </div>
            </div>
           </article>
 
-          <article data-template-id="service-card-two" class="vibrant-card card-secondary rounded-2xl p-5 sm:p-6 shadow-sm border-b-4 border-b-emerald-500">
-           <div class="flex h-full flex-col justify-between gap-6">
+          <article data-template-id="service-card-two" class="vibrant-card card-secondary rounded-[24px] p-6 sm:p-8 shadow-sm">
+           <div class="flex h-full flex-col justify-between gap-8">
             <div>
-             <div class="mb-5 flex items-start justify-between gap-4">
-              <div data-template-id="service-two-icon-bg" class="h-12 w-12 rounded-xl flex items-center justify-center bg-emerald-50 border border-emerald-100 text-emerald-600 shadow-sm">
-               <i data-lucide="clipboard-check" style="width: 22px; height: 22px;"></i>
+             <div class="mb-6 flex items-center justify-between">
+              <div data-template-id="service-two-icon-bg" class="h-14 w-14 rounded-2xl flex items-center justify-center bg-emerald-50 text-emerald-600 border border-emerald-100">
+               <i data-lucide="clipboard-check" style="width: 28px; height: 28px;"></i>
               </div>
-              <span data-template-id="service-two-number" class="rounded-full bg-emerald-100 text-emerald-700 px-3 py-1 text-[10px] font-bold tracking-wider">STEP 02</span>
+              <span data-template-id="service-two-number" class="rounded-full bg-emerald-100 text-emerald-700 px-3.5 py-1.5 text-[11px] font-bold tracking-wider">STEP 02</span>
              </div>
-             <h3 data-template-id="service-two-title" class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">ตรวจสอบสถานะ</h3>
-             <p data-template-id="service-two-desc" class="mt-3 text-xs sm:text-sm leading-relaxed text-slate-600 font-normal">
-              ติดตามความคืบหน้าของข้อมูลที่คุณได้ยื่นเรื่องแจ้งไปแล้ว ว่าอยู่ในขั้นตอนการตรวจสอบ หรือนำเข้าระบบเรียบร้อยแล้วหรือไม่
+             <h3 data-template-id="service-two-title" class="text-xl font-bold text-slate-900 tracking-tight">ตรวจสอบสถานะคำขอ</h3>
+             <p data-template-id="service-two-desc" class="mt-3.5 text-sm leading-relaxed text-slate-500">
+              ติดตามความคืบหน้าของข้อมูลที่คุณได้ยื่นเรื่องแจ้งไปแล้ว ว่าอยู่ในขั้นตอนการตรวจสอบ หรือได้รับการนำเข้าระบบเป็นที่เรียบร้อยแล้วหรือไม่
              </p>
             </div>
             <div class="pt-2">
-             <a href="https://108links.com/STATUS-ALINE" target="_blank" rel="noopener noreferrer" data-template-id="service-two-button" class="btn-vibrant inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3.5 text-xs font-bold shadow-lg shadow-emerald-100 transition-colors"> 
-              <span>ตรวจสอบสถานะปัจจุบัน</span> <i data-lucide="arrow-up-right" style="width: 15px; height: 15px;"></i> 
+             <a href="https://108links.com/STATUS-ALINE" target="_blank" rel="noopener noreferrer" data-template-id="service-two-button" class="btn-gradient-secondary inline-flex w-full items-center justify-center gap-2 rounded-xl text-white px-5 py-4 text-sm font-bold shadow-md transition-all"> 
+              <span>ตรวจสอบสถานะปัจจุบัน</span> <i data-lucide="external-link" style="width: 18px; height: 18px;"></i> 
              </a>
             </div>
            </div>
@@ -205,9 +226,9 @@
         </section>
        </div>
 
-       <footer class="pt-8 text-center border-t border-slate-200/50 mt-8">
-        <p data-template-id="footer-note" class="text-xs text-slate-400 font-medium tracking-wide">
-         © 2026 E-WORKPERMIT Helpdesk System | สำนักบริหารแรงงานต่างด้าว กรมการจัดหางาน. สงวนลิขสิทธิ์ตามกฎหมาย.
+       <footer class="pt-10 text-center mt-10">
+        <p data-template-id="footer-note" class="text-[13px] text-slate-400 font-medium tracking-wide">
+         © 2026 E-WORKPERMIT Helpdesk System | สำนักบริหารแรงงานต่างด้าว กรมการจัดหางาน.
         </p>
        </footer>
        
@@ -215,53 +236,46 @@
     </main>
   </div>
 
-  <div id="duplicate-warning-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-    <div class="relative w-full max-w-md transform overflow-hidden rounded-[28px] bg-white text-left align-middle shadow-2xl transition-all border-t-[8px] border-amber-500 scale-95 duration-300" id="modal-content">
+  <div id="duplicate-warning-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+    <div class="relative w-full max-w-md transform overflow-hidden rounded-[24px] bg-white text-left align-middle shadow-2xl transition-all scale-95 duration-300 border border-slate-100" id="modal-content">
       
-      <div class="p-6 pb-0 flex flex-col items-center text-center gap-3">
-        <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 border-2 border-amber-200 text-amber-500 shadow-inner">
-          <i data-lucide="alert-triangle" style="width: 36px; height: 36px;"></i>
+      <div class="px-6 pt-8 pb-4 flex flex-col items-center text-center gap-4">
+        <div class="relative flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-amber-500">
+          <div class="absolute inset-0 rounded-full border-4 border-amber-100 animate-pulse"></div>
+          <i data-lucide="shield-alert" style="width: 32px; height: 32px; position: relative; z-index: 1;"></i>
         </div>
         
-        <div>
-          <span class="inline-block bg-amber-100 text-amber-700 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-1">ข้อแนะนำการยื่นคำขอ</span>
-          <h3 class="text-xl font-extrabold text-slate-900 leading-tight tracking-tight">ตรวจสอบข้อมูลเพื่อป้องกันการยื่นซ้ำ</h3>
+        <div class="space-y-1">
+          <h3 class="text-xl font-bold text-slate-900">ตรวจสอบก่อนยื่นคำขอ</h3>
+          <p class="text-sm text-slate-500">เพื่อป้องกันการบันทึกข้อมูลซ้ำซ้อนในระบบ</p>
         </div>
       </div>
 
-      <div class="px-6 py-4 space-y-3">
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs sm:text-sm space-y-2.5">
-          <p class="text-slate-600 font-medium leading-relaxed text-center border-b border-slate-200 pb-2">
-            กรุณาตรวจสอบให้แน่ใจว่า รายชื่อแรงงานต่างด้าวรายดังกล่าว <span class="text-amber-600 font-bold underline">ยังไม่เคยมีการส่งเรื่องเข้ามาในระบบ</span> เพื่อความเป็นระเบียบเรียบร้อยของฐานข้อมูล
+      <div class="px-6 py-2 space-y-4">
+        <div class="bg-slate-50 border border-slate-200/60 rounded-2xl p-4.5 text-sm space-y-3">
+          <p class="text-slate-700 font-medium leading-relaxed">
+            กรุณาตรวจสอบให้แน่ใจว่า รายชื่อแรงงานต่างด้าวนี้ <span class="text-amber-600 font-bold bg-amber-50 px-1 rounded">ยังไม่เคยถูกส่งเรื่อง</span> เข้ามาในระบบ
           </p>
           
-          <div class="space-y-2">
-            <div class="flex gap-2.5 items-start text-slate-700 font-medium">
-              <i data-lucide="info" class="shrink-0 mt-0.5 text-amber-500" style="width: 16px; height: 16px;"></i>
-              <span>โปรดหลีกเลี่ยงการส่งคำขอซ้ำ สำหรับแรงงานคนเดิมที่เคยยื่นไปแล้ว</span>
-            </div>
-            <div class="flex gap-2.5 items-start text-slate-600 font-normal">
-              <i data-lucide="search" class="shrink-0 mt-0.5 text-sky-600" style="width: 16px; height: 16px;"></i>
-              <span>หากไม่มั่นใจ สามารถตรวจสอบรายชื่อได้ที่เมนู "STEP 02 ตรวจสอบสถานะ"</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-amber-50/70 border border-amber-100 rounded-2xl p-4 text-xs sm:text-sm flex gap-3 items-start">
-          <i data-lucide="clock" class="text-amber-600 shrink-0 mt-0.5" style="width: 18px; height: 18px;"></i>
-          <div class="text-amber-800 font-medium leading-relaxed">
-            <strong class="font-bold text-amber-950 block mb-0.5">หมายเหตุเกี่ยวกับการดำเนินการ:</strong>
-            การนำเข้าข้อมูลสู่ระบบของเจ้าหน้าที่ (OS) อาจมีความล่าช้าในบางช่วงเวลา ขออภัยในความไม่สะดวกมา
-          </div>
+          <ul class="space-y-2.5">
+            <li class="flex gap-3 items-start text-slate-600">
+              <i data-lucide="check-circle-2" class="shrink-0 mt-0.5 text-sky-500" style="width: 16px; height: 16px;"></i>
+              <span class="text-[13px] leading-relaxed">หากไม่มั่นใจ สามารถตรวจสอบรายชื่อได้ที่เมนู <strong>"STEP 02 ตรวจสอบสถานะ"</strong> ก่อนทำรายการ</span>
+            </li>
+            <li class="flex gap-3 items-start text-slate-600">
+              <i data-lucide="clock" class="shrink-0 mt-0.5 text-sky-500" style="width: 16px; height: 16px;"></i>
+              <span class="text-[13px] leading-relaxed">การนำเข้าข้อมูลสู่ระบบ (OS) อาจใช้ระยะเวลาดำเนินการ ขออภัยในความไม่สะดวก</span>
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div class="bg-slate-50 p-6 pt-4 rounded-b-[28px] flex flex-col sm:flex-row-reverse gap-3 border-t border-slate-100">
-        <button id="btn-modal-confirm" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-amber-500 hover:bg-amber-600 text-white px-4 py-3.5 text-xs font-bold shadow-md transition-colors cursor-pointer">
-          ตรวจสอบแล้ว ดำเนินการต่อ
+      <div class="p-6 pt-4 flex flex-col sm:flex-row-reverse gap-3 mt-2">
+        <button id="btn-modal-confirm" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-amber-500 hover:bg-amber-600 text-white px-4 py-3.5 text-sm font-bold shadow-md shadow-amber-200 transition-colors cursor-pointer">
+          ทราบแล้ว ดำเนินการต่อ
         </button>
-        <button id="btn-modal-cancel" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-700 px-4 py-3.5 text-xs font-bold border border-slate-200 transition-colors cursor-pointer">
-          ยกเลิก เพื่อไปเช็กสถานะก่อน
+        <button id="btn-modal-cancel" class="inline-flex w-full sm:w-auto flex-1 items-center justify-center rounded-xl bg-white hover:bg-slate-50 text-slate-600 px-4 py-3.5 text-sm font-bold border border-slate-200 transition-colors cursor-pointer">
+          กลับไปตรวจสอบสถานะ
         </button>
       </div>
 
